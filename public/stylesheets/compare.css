@@ -1,7 +1,7 @@
 #framecontent{
   border : 1px solid black;
 position :fixed;
-background : #e3e3e3;
+
 top : 150px;
 left : 10px;
 width : 230px;
@@ -10,7 +10,10 @@ overflow : hidden;
 
 
 }
+#framecontent a{
+color : black;
 
+}
 
 #maincontent{
 border : 1px solid black;
@@ -66,3 +69,13 @@ width : 750px;
 color : #86AB57 !important;
 }
 
+
+.active_version {
+	background : #0F6AB4;
+	padding : 5px;
+	
+}
+
+.active_version a{
+color : white !important;
+}

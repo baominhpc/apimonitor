@@ -114,7 +114,7 @@ var Resource = Spine.Controller.sub({
 				Docs.toggleEndpointListForResource(id)		
 			});	
 		}else{
-			Docs.toggleEndpointListForResource(id)		
+			Docs.toggleEndpointListForResource(this.id)		
 		}
 		
 		

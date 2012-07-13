@@ -14,12 +14,23 @@ var ApiVersionMain = Spine.Controller.sub({
 	
 	events : {
 		"click #compare" : "compareVersion",
+		"click #build_version_bt" : "buildVersion"
+		
+	},
+	
+	buildVersion : function(){
+		$.get("/build_database_for_testcase	")
 	},
 	
 	loadListVersion : function(){
-		this.version_content.load("/get_list_version");
+	
+
+		this.version_content.load("/get_list_version", function(){
+			$('#framecontent li:last').addClass("active_version");
+		});
 	},
 	
+
 	
 	compareVersion : function(){
 		if(this.frame_content.find('.ckbox:checked').size() <2){
@@ -44,8 +55,22 @@ var ApiVersionMain = Spine.Controller.sub({
 var ApiVersion = Spine.Controller.sub({
 	
 	events : {
-		"click  a" : "getApiByVersion",
-		"click .ckbox" : "checkLimit"
+		"click  a.version" : "getApiByVersion",
+		"click .ckbox" : "checkLimit",
+		"click .delVersion" : "delVersion"
+	},
+	
+	delVersion : function(e){
+		this.el.remove();
+		$.post(
+			"/delete_version/" + this.id
+			
+		)
+		if($('#framecontent').find('li').size()!=0){
+			$('#framecontent').find('li:first a.version').trigger("click");
+		}else{
+			$('#resources_list').empty();
+		}
 	},
 	
 	checkLimit : function(e){
@@ -56,6 +81,9 @@ var ApiVersion = Spine.Controller.sub({
 	
 	getApiByVersion : function(){
 		Main.getAPI(this.id);
+		$('#framecontent li').removeClass();
+		$('#' + this.id).addClass("active_version");
+		
 	},
 	
 })
