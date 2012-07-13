@@ -94,6 +94,7 @@ object APIApplication extends AbstractController {
   
    def getResource(rest: String, id : String, keyword:String,version:String) = Action {
     val apiResource = apiResourceService.getAPIResource(rest,keyword,version)
+    
     Ok(views.html.apis_list("resource_" + id, id, apiResource.apis))
   }
    

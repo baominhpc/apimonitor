@@ -65,8 +65,10 @@ var TestCaseMain = Spine.Controller.sub({
 			exp_params += "\"" + name + "\":\"" + value + "\",";
 			
 		});
+		console.log(exp_params);
 		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
-			exp_params = exp_params.substr(0, exp_params.length -2);
+			exp_params = exp_params.substr(0, exp_params.length -1);
+			console.log(exp_params);
 		}
 		exp_params +="}";
 		var obj = new Object();
