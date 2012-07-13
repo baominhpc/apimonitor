@@ -15,7 +15,7 @@
             </thead>
             <tbody id="@id&#95params">
             	@for(p <- operation.parameters){
-            		@param(p)
+            		@param(p) 
             	}
             </tbody>
           </table>
@@ -33,7 +33,13 @@
               </tr>
             </thead>
             <tbody class="expert_params">
-        
+            @if(operation.expert_params != null){
+       			@for(ep <- operation.expert_params){
+					<script>
+            		console.log("wzpar=@ep");
+            		</script>
+       			}
+     		}
             </tbody>
           </table>
 
