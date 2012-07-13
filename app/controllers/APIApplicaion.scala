@@ -108,6 +108,6 @@ object APIApplication extends AbstractController {
    
    def getResourceNameInVersion(version:String) = Action {
      val list = versionTrackingService.getPathListOfVersion(version)
-      Ok(views.html.resource_list_only())
+     Ok(list.toString())
   }
 }
