@@ -71,7 +71,10 @@ Main.extend({
 		return o;
 	},
 	
-	getAPI : function() {
+	getAPI : function(version) {
+		if(version == null){
+			version= "";
+		}
 		var url = $("#input_baseUrl").val().trim();
 		var token = $("#input_apiKey").val().trim();
 		var keyword = $('#filter').val();
@@ -80,7 +83,7 @@ Main.extend({
 		$("#content_message").slideDown();
 	
 		var controller = this;
-		$('#resources_list').load('/get_list_name_resource?url=' + encodeURIComponent(url),
+		$('#resources_list').load('/get_list_name_resource?url=' + encodeURIComponent(url) + "&version=" + version,
 				null, function() {
 					$("#content_message").slideUp();
 					$("#resources_list").slideDown();

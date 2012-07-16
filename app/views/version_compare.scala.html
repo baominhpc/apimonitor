@@ -36,8 +36,9 @@
 
 </head>
 <body>
+<img alt="" src="">
 
-
+<div><img align="middle" src="@routes.Assets.at("images/loadingAnimation.gif")" ></div>
 <div id="left_frame">
 	<div class="innercontent">
 		<div id="content_message"></div>
@@ -57,8 +58,11 @@
 </div>
 </body>
 <script type="text/javascript">
+$(function(){
 	new VersionCompare({
 		el : $('body')
 	})
+});
+
 </script>
 </html>
