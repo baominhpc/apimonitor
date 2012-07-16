@@ -19,7 +19,10 @@ var ApiVersionMain = Spine.Controller.sub({
 	},
 	
 	buildVersion : function(){
-		$.get("/build_database_for_testcase	")
+		$.get("/build_database_for_testcase	", function(){
+			window.location = "/version";	
+		});
+			
 	},
 	
 	loadListVersion : function(){

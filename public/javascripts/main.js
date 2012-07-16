@@ -154,6 +154,7 @@ var Operation = Spine.Controller.sub({
 	
 	elements : {
 		".expert_params" : "expert_container",
+		".params_table"  : "params_table"
 	},
 
 	add_expert_input : function(){
@@ -198,11 +199,11 @@ var Operation = Spine.Controller.sub({
 						.complete(this.proxy(this.showCompleteStatus)).error(
 								this.proxy(this.showErrorStatus));
 			} else {
-				var postParams = this.operation.invocationPostParam(form
+				var postParams = this.invocationPostParam(form
 						.serializeArray());
 				$.post(invocationUrl, $.parseJSON(postParams),
-						this.showResponse).complete(this.showCompleteStatus)
-						.error(this.showErrorStatus);
+						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
+						.error(this.proxy(this.showErrorStatus));
 			}
 
 		}
@@ -319,15 +320,25 @@ var Operation = Spine.Controller.sub({
 		}
 
 		var postParam = "";
-		this.parameters.each(function(param) {
-			var paramValue = jQuery.trim(formValuesMap[param.name]);
-			if (param.paramType == "body" && paramValue.length > 0) {
+		this.params_table.find("tbody tr").each(function(){
+			var name = $(this).find(".code").html();
+			var paramValue = jQuery.trim(formValuesMap[name]);
+			if (paramValue.length > 0) {
 				postParam = postParam.length > 0 ? postParam : "{";
-				postParam += "\"" + param.name + "\"";
+				postParam += "\"" + name + "\"";
 				postParam += ":";
-				postParam += "\"" + formValuesMap[param.name] + "\",";
+				postParam += "\"" + formValuesMap[name] + "\",";
 			}
 		});
+//		this.parameters.each(function(param) {
+//			var paramValue = jQuery.trim(formValuesMap[param.name]);
+//			if (param.paramType == "body" && paramValue.length > 0) {
+//				postParam = postParam.length > 0 ? postParam : "{";
+//				postParam += "\"" + param.name + "\"";
+//				postParam += ":";
+//				postParam += "\"" + formValuesMap[param.name] + "\",";
+//			}
+//		});
 
 		if (postParam.length > 0) {
 			postParam = postParam.substring(0, postParam.length - 1) + "}";

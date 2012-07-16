@@ -5,7 +5,7 @@
         <form accept-charset='UTF-8' action='#' class='sandbox' id="@id&#95form" method='post'>
           <div style='margin:0;padding:0;display:inline'></div>
           <h4>Parameters</h4>
-          <table class='fullwidth'>
+          <table class='fullwidth params_table'>
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -34,10 +34,8 @@
             </thead>
             <tbody class="expert_params">
             @if(operation.expert_params != null){
-       			@for(ep <- operation.expert_params){
-					<script>
-            		console.log("wzpar=@ep");
-            		</script>
+       			@for(ep <- operation.expectedParameters){
+					@expert_param(ep)
        			}
      		}
             </tbody>
