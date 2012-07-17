@@ -15,6 +15,11 @@
 				<option value='${$value}'>${$value}</option> {{/if}} {{/each}}
 		</select></td>
 		<td class="type">@param.dataType</td>
+		<td><input name="needed_name"  /></td>
+		<td>
+			<select name="needed_api">
+				<option></option>		
+			</select></td>
 		<td width='500'>@param.description</td>
 	</tr>
 }else{*@ 
@@ -24,6 +29,11 @@
 				<td class='code required'>@param.name</td>
 				<td>-</td>
 				<td class="type">@param.dataType</td>
+				<td><input name="needed_name"  /></td>
+				<td>
+				<select name="needed_api">
+					<option></option>		
+				</select></td>
 				<td width='500'>@param.description</td>
 			</tr>
 		}else{
@@ -32,6 +42,11 @@
 				<td><input class='required' minlength='1' name='@param.name'
 					placeholder='(required)' type='text' value='@param.value' /></td>
 					<td class="type">@param.dataType</td>
+						<td><input name="needed_name"  /></td>
+		<td>
+			<select name="needed_api">
+				<option></option>		
+			</select></td>
 				<td width='500'><strong>@param.description</strong></td>
 			</tr>
 		}
@@ -41,6 +56,11 @@
 				<td class='code'>@param.name</td>
 				<td>-</td>
 				<td class="type">@param.dataType</td>
+					<td><input name="needed_name"  /></td>
+		<td>
+			<select name="needed_api">
+				<option></option>		
+			</select></td>
 				<td width='500'>@param.description</td>
 			</tr>
 		}else{
@@ -49,6 +69,11 @@
 				<td><input minlength='0' name='@param.name' placeholder='' type='text'
 					value='@param.value' /></td>
 					<td class="type">@param.dataType</td>
+						<td><input name="needed_name"  /></td>
+		<td>
+			<select name="needed_api">
+				<option></option>		
+			</select></td>
 				<td width='500'>@param.description</td>
 			</tr>
 		}

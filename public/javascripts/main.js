@@ -206,11 +206,11 @@ var Operation = Spine.Controller.sub({
 				var version = "v2";
 				var data;
 				if(version == "v1"){
-					data = "params=" + postParams ;
+					postParams = "params=" + postParams ;
 				}else{
 					data = $.parseJSON(postParams);
 				}
-				$.post(invocationUrl , $.parseJSON(data),
+				$.post(invocationUrl , (data),
 						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
 						.error(this.proxy(this.showErrorStatus));
 			}
