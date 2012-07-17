@@ -201,7 +201,21 @@ var Operation = Spine.Controller.sub({
 			} else {
 				var postParams = this.invocationPostParam(form
 						.serializeArray());
-				$.post(invocationUrl, $.parseJSON(postParams),
+//				params="params={\"realid\":\"07e36240-6845-11e1-850d-005056a70023\",\"group_type\":\"Friend\",\"msg\":\"I love you\"}"
+//					
+//				$.post("http://api.sgcharo.com/mobion/real/shout/7527de50c99611e18479005056a70023",(params),
+//						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
+//						.error(this.proxy(this.showErrorStatus));
+//				
+				var version = "v2";
+				var data;
+				if(version == "v1"){
+					data = "params=" + postParams ;
+				}else{
+					data = $.parseJSON(postParams);
+				}
+		
+				$.post(invocationUrl, (data),
 						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
 						.error(this.proxy(this.showErrorStatus));
 			}
@@ -281,10 +295,8 @@ var Operation = Spine.Controller.sub({
 		}
 
 		var urlTemplateText = this.path.split("{").join("${");
-		// log("url template = " + urlTemplateText);
 		var urlTemplate = $.template(null, urlTemplateText);
 		var url = $.tmpl(urlTemplate, formValuesMap)[0].data;
-		// log("url with path params = " + url);
 
 		var queryParams = "";
 		var apiKey = Main.token;
@@ -297,17 +309,27 @@ var Operation = Spine.Controller.sub({
 		// var names = Object.keys(formValuesMap);
 		for ( var name in formValuesMap) {
 			var value = formValuesMap[name];
-			if (value.length > 0) {
-				queryParams += queryParams.length > 0 ? "&" : "?";
-				queryParams += name;
-				queryParams += "=";
-				queryParams += value;
+			var valArr = new Array();
+			valArr[0] = value;
+			if(this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html() == "String[]"){
+				valArr = value.split(",");
 			}
+			
+			for(var i in valArr){
+				val = jQuery.trim(valArr[i]);
+				if (val.length > 0) {
+					queryParams += queryParams.length > 0 ? "&" : "?";
+					
+					queryParams += name;
+					queryParams += "=";
+					queryParams += val;
+				}
+			}
+			
 		}
 		;
 
 		url = Main.base_url + url + queryParams;
-
 		return url;
 	},
 
@@ -318,34 +340,40 @@ var Operation = Spine.Controller.sub({
 			if (formValue.value && jQuery.trim(formValue.value).length > 0)
 				formValuesMap[formValue.name] = formValue.value;
 		}
-
+		
 		var postParam = "";
-		this.params_table.find("tbody tr").each(function(){
-			var name = $(this).find(".code").html();
-			var paramValue = jQuery.trim(formValuesMap[name]);
-			if (paramValue.length > 0) {
-				postParam = postParam.length > 0 ? postParam : "{";
-				postParam += "\"" + name + "\"";
-				postParam += ":";
-				postParam += "\"" + formValuesMap[name] + "\",";
+		var version = "v2";
+		for(var name in formValuesMap){
+			
+			var value = jQuery.trim(formValuesMap[name]);
+			var valArr = new Array();
+			valArr[0] = value;
+			var dataType = this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html() == "String[]"; 
+			if(dataType){
+				valArr = value.split(",");
 			}
-		});
-//		this.parameters.each(function(param) {
-//			var paramValue = jQuery.trim(formValuesMap[param.name]);
-//			if (param.paramType == "body" && paramValue.length > 0) {
-//				postParam = postParam.length > 0 ? postParam : "{";
-//				postParam += "\"" + param.name + "\"";
-//				postParam += ":";
-//				postParam += "\"" + formValuesMap[param.name] + "\",";
-//			}
-//		});
+			for(var i  in valArr){
+				paramValue = jQuery.trim(valArr[i]);
+				if (paramValue.length > 0) {
+					postParam = postParam.length > 0 ? postParam : "{";
+					postParam += "\"" + name + "\"";
+					postParam += ":";
+					postParam += "\"" + paramValue + "\",";
+				}
+			}
+			
+		
+			
+		}
+
 
 		if (postParam.length > 0) {
 			postParam = postParam.substring(0, postParam.length - 1) + "}";
 		}
-
 		return postParam;
-	}
+	},
+	
+	
 
 });
 

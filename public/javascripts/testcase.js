@@ -55,9 +55,6 @@ var TestCaseMain = Spine.Controller.sub({
 		var formData = form2js(idform, '.', true);
 		var json = JSON.stringify(formData, null, '\t');
 		
-//		var idExp = $(e.target).parents(".endpoint").find("div.expert_frm").attr("id");
-//		var formDataExp = form2js(idExp, '.', true);
-//		var js_expert = JSON.stringify(formDataExp, null, '\t');
 		var exp_params = "{";
 		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
 			var name = $(this).find("input[name=name]").val();
@@ -65,10 +62,8 @@ var TestCaseMain = Spine.Controller.sub({
 			exp_params += "\"" + name + "\":\"" + value + "\",";
 			
 		});
-		console.log(exp_params);
 		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
 			exp_params = exp_params.substr(0, exp_params.length -1);
-			console.log(exp_params);
 		}
 		exp_params +="}";
 		var obj = new Object();
@@ -179,7 +174,6 @@ var TestCase = Spine.Controller.sub({
 	getDetails : function() {
 		if ($("#testcase_" + this.id + " .endpoints .endpoint").size() == 0) {
 			var controller = this;
-console.log("api = /api_in_testcase/" + this.id);
 			$.get("/api_in_testcase/" + this.id, null, function(res) {
 				controller.endpoints.empty();
 				controller.endpoints.append(res);
