@@ -18,9 +18,12 @@ object APIApplication extends AbstractController {
   }
   
   
+   def compare(ver1 : String, ver2 : String) = Action {
+     Ok(views.html.compare_index(ver1, ver2))
+   }
   def version_compare(ver1 : String, ver2 : String) = Action {
-    var list1 = getAPIFunc("", "20120713")
-    var list2 = getAPIFunc("", "20120713")
+    var list1 = getAPIFunc("", ver1)
+    var list2 = getAPIFunc("", ver2	)
     Ok(views.html.version_compare(list1, list2))
   }
   

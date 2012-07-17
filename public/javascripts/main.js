@@ -201,23 +201,18 @@ var Operation = Spine.Controller.sub({
 			} else {
 				
 				var postParams = this.invocationPostParam(form.serializeArray());
-				$.post(invocationUrl , $.parseJSON(postParams),
+			
+				
+				var version = "v2";
+				var data;
+				if(version == "v1"){
+					data = "params=" + postParams ;
+				}else{
+					data = $.parseJSON(postParams);
+				}
+				$.post(invocationUrl , $.parseJSON(data),
 						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
 						.error(this.proxy(this.showErrorStatus));
-				
-//				var version = "v2";
-//				var data;
-//				if(version == "v1"){
-//					data = "params=" + postParams ;
-//				}else{
-//					console.log(postParams);
-//					data = $.parseJSON(postParams);
-//				}
-		
-//				
-//				$.post(invocationUrl, $.parseJSON(postParams),
-//						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
-//						.error(this.proxy(this.showErrorStatus));
 			}
 
 		}
@@ -352,19 +347,34 @@ var Operation = Spine.Controller.sub({
 			var value = jQuery.trim(formValuesMap[name]);
 			var valArr = new Array();
 			valArr[0] = value;
-			var dataType = this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html() == "String[]"; 
-			if(dataType){
+			var dataType = this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html(); 
+			if(dataType == "String[]"){
 				valArr = value.split(",");
+				
 			}
-			for(var i  in valArr){
-				paramValue = jQuery.trim(valArr[i]);
-				if (paramValue.length > 0) {
-					postParam = postParam.length > 0 ? postParam : "{";
-					postParam += "\"" + name + "\"";
-					postParam += ":";
-					postParam += "\"" + paramValue + "\",";
+			if(version == "v1" && dataType == "String[]"){
+				var listFormatParam = "\"" + name + "\":[";
+				for(var i in valArr){
+					
+					var paramValue = jQuery.trim(valArr[i]);
+					if(paramValue.length > 0){
+						listFormatParam += "\"" + paramValue + "\",";
+					}
+				}
+				listFormatParam = listFormatParam.substring(0, listFormatParam.length-1) + "],";
+				postParam += listFormatParam;
+			}else{
+				for(var i  in valArr){
+					var paramValue = jQuery.trim(valArr[i]);
+					if (paramValue.length > 0) {
+						postParam = postParam.length > 0 ? postParam : "{";
+						postParam += "\"" + name + "\"";
+						postParam += ":";
+						postParam += "\"" + paramValue + "\",";
+					}
 				}
 			}
+//			
 			
 		
 			
@@ -374,6 +384,7 @@ var Operation = Spine.Controller.sub({
 		if (postParam.length > 0) {
 			postParam = postParam.substring(0, postParam.length - 1) + "}";
 		}
+		console.log(postParam);
 		return postParam;
 	},
 	

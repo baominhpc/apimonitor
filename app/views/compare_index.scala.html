@@ -1,0 +1,33 @@
+@(ver1 :String, ver2 : String)
+<html>
+<head>
+<link
+	href="@routes.Assets.at("stylesheets/jquery-ui.css")"
+	media='screen' rel='stylesheet' type='text/css' />
+<link  
+	href="@routes.Assets.at("stylesheets/screen.css")"
+	rel="stylesheet" media="screen"/>
+<link  
+	href="@routes.Assets.at("stylesheets/compare.css")"
+	rel="stylesheet" media="screen"/>
+	
+
+<script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.tmpl.js")"></script>
+<script src="@routes.Assets.at("javascripts/form2js.js")"></script>
+<script src="@routes.Assets.at("javascripts/spine.js")"></script>
+<script src="@routes.Assets.at("javascripts/local.js")"></script>
+<script src="@routes.Assets.at("javascripts/main.js")"></script>
+<script src="@routes.Assets.at("javascripts/api_version.js")"></script>
+
+<script>
+$(function(){
+	$('body').load("/compare_version?ver1=@ver1&ver2=@ver2");
+})
+	
+</script>
+</head>
+<body>
+<div class="img_loading" style="text-align: center;"><img src="@routes.Assets.at("images/loadingAnimation.gif")" ></div>
+</body>
+</html>

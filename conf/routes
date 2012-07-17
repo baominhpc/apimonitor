@@ -25,8 +25,9 @@ POST	/remove_api_from_testcase               controllers.TestCaseApplication.rem
 
 
 #API Controller
+GET      /compare								  controllers.APIApplication.compare(ver1: String, ver2 : String)
 GET 	/version						      controllers.APIApplication.version_index
-GET 	/compare							  controllers.APIApplication.version_compare(ver1: String ="20120704", ver2 : String="20120705")
+GET 	/compare_version							  controllers.APIApplication.version_compare(ver1: String, ver2 : String)
 GET    /getapi                                controllers.APIApplication.getapi(keyword: String ?= "", version: String ?= "")
 GET   /build_database_for_testcase			  controllers.TestCaseApplication.buildAPIDatabase
 GET    /get_resources                         controllers.APIApplication.getResources(start:String,size:String,rest:String,version:String)
