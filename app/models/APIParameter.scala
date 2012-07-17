@@ -13,10 +13,13 @@ import com.novus.salat.annotations._
     paramType : String = "",
     readOnly: Boolean = false,
     var apiId:BaseKey = new BaseKey("",""),
-    var value:String = ""){
+    var value:String = "",
+    var max:String = "",
+    var min:String = "",
+    var options:String = ""){
   
   def this() = {
-    this(new BaseKey(),"","",false,"",false,"", false,new BaseKey("",""),"");
+    this(new BaseKey(),"","",false,"",false,"", false,new BaseKey("",""),"","","","");
   }
 }
 object APIParameter{
