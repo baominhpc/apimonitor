@@ -6,6 +6,7 @@ import com.novus.salat.dao.SalatDAO
 import com.novus.salat.Context
 import models.BaseKey
 import com.mongodb.casbah.WriteConcern
+import com.mongodb.casbah.commons.MongoDBList
 
 
 class MongoSalatDAO[ObjectType <: AnyRef, ID <: AnyRef](collectionName: String)(implicit mot: Manifest[ObjectType], mid: Manifest[ID], ctx: Context) extends 
@@ -83,6 +84,30 @@ class MongoSalatDAO[ObjectType <: AnyRef, ID <: AnyRef](collectionName: String)(
       null
     }
     result.toList
+  }
+  
+  def countLike(field:String, value:String) = {
+    var regex = ".*" + value + ".*"
+    count(MongoDBObject(field -> regex.r))
+  }
+  
+  def findLike(field:String, value:String) = {
+    var regex = ".*" + value + ".*"
+    var result = find(MongoDBObject(field -> regex.r))
+    if(result == None){
+      null
+    }
+    result.toList
+  }
+  
+  def findByMultiCondition(connector:String, conditions:List[MongoDBObject] = List[MongoDBObject]()){
+    val builder = MongoDBList.newBuilder
+    conditions.foreach(condition =>{
+      builder += condition
+    }
+    )
+    val query = MongoDBObject("$or" -> builder)
+    val result = find(query)
   }
   
   def removeByCondition(field:String, value:String){
