@@ -18,9 +18,12 @@ object APIApplication extends AbstractController {
   }
   
   
+   def compare(ver1 : String, ver2 : String) = Action {
+     Ok(views.html.compare_index(ver1, ver2))
+   }
   def version_compare(ver1 : String, ver2 : String) = Action {
-    var list1 = getAPIFunc("", "")
-    var list2 = getAPIFunc("", ver2)
+    var list1 = getAPIFunc("", ver1)
+    var list2 = getAPIFunc("", ver2	)
     Ok(views.html.version_compare(list1, list2))
   }
   
@@ -94,6 +97,7 @@ object APIApplication extends AbstractController {
   
    def getResource(rest: String, id : String, keyword:String,version:String) = Action {
     val apiResource = apiResourceService.getAPIResource(rest,keyword,version)
+    
     Ok(views.html.apis_list("resource_" + id, id, apiResource.apis))
   }
    
@@ -108,6 +112,6 @@ object APIApplication extends AbstractController {
    
    def getResourceNameInVersion(version:String) = Action {
      val list = versionTrackingService.getAPIREsourceListOfVersion(version)
-     Ok(list.toString())
+     Ok(views.html.resources_list(list))
   }
 }

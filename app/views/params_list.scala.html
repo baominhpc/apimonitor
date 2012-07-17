@@ -5,35 +5,40 @@
         <form accept-charset='UTF-8' action='#' class='sandbox' id="@id&#95form" method='post'>
           <div style='margin:0;padding:0;display:inline'></div>
           <h4>Parameters</h4>
-          <table class='fullwidth'>
+          <table class='fullwidth params_table'>
             <thead>
               <tr>
                 <th>Parameter</th>
                 <th id="@id&#95value&#95header">Value</th>
+                <th style="width: 15%;">Type</th>
                 <th>Description</th>
               </tr>
             </thead>
             <tbody id="@id&#95params">
             	@for(p <- operation.parameters){
-            		@param(p)
+            		@param(p) 
             	}
             </tbody>
           </table>
           @if(ver == ""){
               	         
         <div id="expert_frm_@id" class="expert_frm">
-        	<h4>Expert Params</h4>
+        	<h4>Expect Params</h4>
    
         	 <table class='fullwidth'>
             <thead>
               <tr>
                 <th>Parameter</th>
-                <th>Value</th>
+                <th style="width:48%;">Value</th>
                 
               </tr>
             </thead>
             <tbody class="expert_params">
-        
+            @if(operation.expert_params != null){
+       			@for(ep <- operation.expectedParameters){
+					@expert_param(ep)
+       			}
+     		}
             </tbody>
           </table>
 

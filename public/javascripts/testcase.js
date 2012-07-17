@@ -55,9 +55,6 @@ var TestCaseMain = Spine.Controller.sub({
 		var formData = form2js(idform, '.', true);
 		var json = JSON.stringify(formData, null, '\t');
 		
-//		var idExp = $(e.target).parents(".endpoint").find("div.expert_frm").attr("id");
-//		var formDataExp = form2js(idExp, '.', true);
-//		var js_expert = JSON.stringify(formDataExp, null, '\t');
 		var exp_params = "{";
 		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
 			var name = $(this).find("input[name=name]").val();
@@ -66,7 +63,7 @@ var TestCaseMain = Spine.Controller.sub({
 			
 		});
 		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
-			exp_params = exp_params.substr(0, exp_params.length -2);
+			exp_params = exp_params.substr(0, exp_params.length -1);
 		}
 		exp_params +="}";
 		var obj = new Object();

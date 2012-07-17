@@ -71,7 +71,10 @@ Main.extend({
 		return o;
 	},
 	
-	getAPI : function() {
+	getAPI : function(version) {
+		if(version == null){
+			version= "";
+		}
 		var url = $("#input_baseUrl").val().trim();
 		var token = $("#input_apiKey").val().trim();
 		var keyword = $('#filter').val();
@@ -80,7 +83,7 @@ Main.extend({
 		$("#content_message").slideDown();
 	
 		var controller = this;
-		$('#resources_list').load('/getapi?url=' + encodeURIComponent(url),
+		$('#resources_list').load('/get_list_name_resource?url=' + encodeURIComponent(url) + "&version=" + version,
 				null, function() {
 					$("#content_message").slideUp();
 					$("#resources_list").slideDown();
@@ -114,7 +117,7 @@ var Resource = Spine.Controller.sub({
 				Docs.toggleEndpointListForResource(id)		
 			});	
 		}else{
-			Docs.toggleEndpointListForResource(id)		
+			Docs.toggleEndpointListForResource(this.id)		
 		}
 		
 		
@@ -151,6 +154,7 @@ var Operation = Spine.Controller.sub({
 	
 	elements : {
 		".expert_params" : "expert_container",
+		".params_table"  : "params_table"
 	},
 
 	add_expert_input : function(){
@@ -186,7 +190,7 @@ var Operation = Spine.Controller.sub({
 		});
 
 		if (error_free) {
-			var invocationUrl = this.invocationUrl(form.serializeArray());
+			var invocationUrl = this.invocationUrl(form.serializeArray(), this.http_method);
 			$(".request_url", this.target + "_content_sandbox_response")
 					.html("<pre>" + invocationUrl + "</pre>");
 
@@ -195,11 +199,20 @@ var Operation = Spine.Controller.sub({
 						.complete(this.proxy(this.showCompleteStatus)).error(
 								this.proxy(this.showErrorStatus));
 			} else {
-				var postParams = this.operation.invocationPostParam(form
-						.serializeArray());
-				$.post(invocationUrl, $.parseJSON(postParams),
-						this.showResponse).complete(this.showCompleteStatus)
-						.error(this.showErrorStatus);
+				
+				var postParams = this.invocationPostParam(form.serializeArray());
+			
+				
+				var version = "v2";
+				var data;
+				if(version == "v1"){
+					data = "params=" + postParams ;
+				}else{
+					data = $.parseJSON(postParams);
+				}
+				$.post(invocationUrl , $.parseJSON(data),
+						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
+						.error(this.proxy(this.showErrorStatus));
 			}
 
 		}
@@ -268,7 +281,7 @@ var Operation = Spine.Controller.sub({
 		$(this.target + "_content_sandbox_response").slideDown();
 	},
 
-	invocationUrl : function(formValues) {
+	invocationUrl : function(formValues, method) {
 		var formValuesMap = new Object();
 		for ( var i = 0; i < formValues.length; i++) {
 			var formValue = formValues[i];
@@ -277,10 +290,8 @@ var Operation = Spine.Controller.sub({
 		}
 
 		var urlTemplateText = this.path.split("{").join("${");
-		// log("url template = " + urlTemplateText);
 		var urlTemplate = $.template(null, urlTemplateText);
 		var url = $.tmpl(urlTemplate, formValuesMap)[0].data;
-		// log("url with path params = " + url);
 
 		var queryParams = "";
 		var apiKey = Main.token;
@@ -291,19 +302,33 @@ var Operation = Spine.Controller.sub({
 		}
 
 		// var names = Object.keys(formValuesMap);
+		if(method=="post"){
+			url = Main.base_url + url + queryParams;
+			return url;
+		}
 		for ( var name in formValuesMap) {
 			var value = formValuesMap[name];
-			if (value.length > 0) {
-				queryParams += queryParams.length > 0 ? "&" : "?";
-				queryParams += name;
-				queryParams += "=";
-				queryParams += value;
+			var valArr = new Array();
+			valArr[0] = value;
+			if(this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html() == "String[]"){
+				valArr = value.split(",");
 			}
+			
+			for(var i in valArr){
+				val = jQuery.trim(valArr[i]);
+				if (val.length > 0) {
+					queryParams += queryParams.length > 0 ? "&" : "?";
+					
+					queryParams += name;
+					queryParams += "=";
+					queryParams += val;
+				}
+			}
+			
 		}
 		;
 
 		url = Main.base_url + url + queryParams;
-
 		return url;
 	},
 
@@ -314,24 +339,56 @@ var Operation = Spine.Controller.sub({
 			if (formValue.value && jQuery.trim(formValue.value).length > 0)
 				formValuesMap[formValue.name] = formValue.value;
 		}
-
+		
 		var postParam = "";
-		this.parameters.each(function(param) {
-			var paramValue = jQuery.trim(formValuesMap[param.name]);
-			if (param.paramType == "body" && paramValue.length > 0) {
-				postParam = postParam.length > 0 ? postParam : "{";
-				postParam += "\"" + param.name + "\"";
-				postParam += ":";
-				postParam += "\"" + formValuesMap[param.name] + "\",";
+		var version = "v2";
+		for(var name in formValuesMap){
+			
+			var value = jQuery.trim(formValuesMap[name]);
+			var valArr = new Array();
+			valArr[0] = value;
+			var dataType = this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html(); 
+			if(dataType == "String[]"){
+				valArr = value.split(",");
+				
 			}
-		});
+			if(version == "v1" && dataType == "String[]"){
+				var listFormatParam = "\"" + name + "\":[";
+				for(var i in valArr){
+					
+					var paramValue = jQuery.trim(valArr[i]);
+					if(paramValue.length > 0){
+						listFormatParam += "\"" + paramValue + "\",";
+					}
+				}
+				listFormatParam = listFormatParam.substring(0, listFormatParam.length-1) + "],";
+				postParam += listFormatParam;
+			}else{
+				for(var i  in valArr){
+					var paramValue = jQuery.trim(valArr[i]);
+					if (paramValue.length > 0) {
+						postParam = postParam.length > 0 ? postParam : "{";
+						postParam += "\"" + name + "\"";
+						postParam += ":";
+						postParam += "\"" + paramValue + "\",";
+					}
+				}
+			}
+//			
+			
+		
+			
+		}
+
 
 		if (postParam.length > 0) {
 			postParam = postParam.substring(0, postParam.length - 1) + "}";
 		}
-
+		console.log(postParam);
 		return postParam;
-	}
+	},
+	
+	
 
 });
 
