@@ -113,7 +113,6 @@ class MongoSalatDAO[ObjectType >: Null <: AnyRef, ID <: AnyRef](collectionName: 
     if(result == None){
       null
     }else{
-      print("*******************  " + result.toString() + "********************")
       result.toList      
     }
   }
