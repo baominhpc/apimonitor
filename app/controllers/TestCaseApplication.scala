@@ -31,8 +31,8 @@ object TestCaseApplication extends AbstractController {
 
 
   def getAPIsinTestCase(id: String) = Action { request =>
-    Ok(views.html.apis_list_in_testcase("testcase_" + id, id, testCaseService.getAPIsinTestCase(id)))
-
+//    Ok(views.html.apis_list_in_testcase("testcase_" + id, id, testCaseService.getAPIsinTestCase(id)))
+      Ok(testCaseService.getAPIsinTestCase(id).toString())
   }
 
   def addTestCase = Action(parse.json) { request =>
