@@ -1,4 +1,4 @@
-@(id : String, operation : models.APIOperation, ver : String ="") 
+@(id : String, operation : models.APIOperation, ver : String ="", apis : List[models.APIOperation] = List[models.APIOperation]()) 
 <div class='content' id="@id&#95content" style='display:none'>
         <h4>Implementation Notes</h4>
         <p>@operation.notes</p>
@@ -20,7 +20,7 @@
             </thead>
             <tbody id="@id&#95params">
             	@for(p <- operation.parameters){
-            		@param(p) 
+            		@param(p, apis) 
             	}
             </tbody>
           </table>

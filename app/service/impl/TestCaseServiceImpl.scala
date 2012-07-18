@@ -75,7 +75,7 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
   
   def getAPIsinTestCase(testCaseId: String): List[APIOperation] = {
     var testCase = testCaseDAO.findById(testCaseId)
-
+    		println("TEST CASE ============" + (testCase.apiConfigIds))
     if (testCase != null) {
       return getAPIsfromConfigs(testCase.apiConfigIds);
     }
@@ -87,6 +87,7 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
     var list = new ListBuffer[APIOperation]();
     apiConfigIds.foreach(id => {
         var apiConfig = apiConfigDAO.findById(id)
+        
         if (apiConfig != null) {
           list += getAPIfromConfig(apiConfig)
         }
@@ -95,6 +96,7 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
       return list.toList;
   }
   private def getAPIfromConfig(apiConfig : APIConfig) : APIOperation = {
+    println("APICO++++++++++++++++++" + apiConfig.apiId)
     var api = apiOperationDAO.findById(apiConfig.apiId)
     
     if (api != null) {

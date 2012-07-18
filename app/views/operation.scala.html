@@ -1,4 +1,4 @@
-@(parentId : String, id: String, apiPath : String, operation : models.APIOperation, isAdd : Boolean, idTestcase : String ="", ver : String ="")
+@(parentId : String, id: String, apiPath : String, operation : models.APIOperation, isAdd : Boolean, idTestcase : String ="", ver : String ="", apis : List[models.APIOperation] = List[models.APIOperation]())
 @defining(util.StringUtil.formatId(parentId + "_" + id + "_" + operation.nickname + "_" + operation.httpMethod + ver)) { op_id =>
 <li class="@operation.httpMethod.toLowerCase() operation"
 	id="@op_id">
@@ -39,6 +39,6 @@
 			
 		}); 
 	</script>
-	@params_list(op_id, operation, ver)
+	@params_list(op_id, operation, ver, apis)
 </li>
 }

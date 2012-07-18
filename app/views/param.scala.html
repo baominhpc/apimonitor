@@ -1,4 +1,4 @@
-@(param : models.APIParameter)
+@(param : models.APIParameter, apis : List[models.APIOperation] = List[models.APIOperation] )
  
 @*
 
@@ -18,7 +18,9 @@
 		<td><input name="needed_name"  /></td>
 		<td>
 			<select name="needed_api">
-				<option></option>		
+			@for(api <- apis){
+				<option>@api</option>
+			}		
 			</select></td>
 		<td width='500'>@param.description</td>
 	</tr>
