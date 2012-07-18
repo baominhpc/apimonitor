@@ -7,7 +7,7 @@ import com.novus.salat.Context
 import models.BaseKey
 import com.mongodb.casbah.WriteConcern
 import com.mongodb.casbah.commons.MongoDBList
-
+import com.mongodb.casbah.commons.Imports.DBObject
 
 class MongoSalatDAO[ObjectType >: Null <: AnyRef, ID <: AnyRef](collectionName: String)(implicit mot: Manifest[ObjectType], mid: Manifest[ID], ctx: Context) extends 
 	SalatDAO[ObjectType, ID](collection = MongoConnection("mongo01b",27017)("mobion")(collectionName))(mot, mid, ctx) with FluidQueryBarewordOps{
@@ -95,21 +95,27 @@ class MongoSalatDAO[ObjectType >: Null <: AnyRef, ID <: AnyRef](collectionName: 
   def findLike(field:String, value:String):List[ObjectType] = {
     var regex = ".*" + value + ".*"
     var result = find(MongoDBObject(field -> regex.r))
-    if(result == None){
+    if(result == None ||  result == null){
       return null
     }else{
       return result.toList      
     }
   }
   
-  def findByMultiCondition(connector:String, conditions:List[MongoDBObject] = List[MongoDBObject]()){
+  def findByMultiCondition(connector:String, conditions:List[DBObject] = List[DBObject]()) = {
     val builder = MongoDBList.newBuilder
     conditions.foreach(condition =>{
       builder += condition
     }
     )
-    val query = MongoDBObject("$or" -> builder)
+    val query = MongoDBObject(connector -> builder.result())
     val result = find(query)
+    if(result == None){
+      null
+    }else{
+      print("*******************  " + result.toString() + "********************")
+      result.toList      
+    }
   }
   
   def removeByCondition(field:String, value:String){
