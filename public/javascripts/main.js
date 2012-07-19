@@ -196,15 +196,22 @@ var Operation = Spine.Controller.sub({
 		obj.exp_params = exp_params;
 		obj.params =json;
 		obj.apiId = e.target.id.split("id_")[1];
-		obj.id = e.target.id.split("id_")[1].split('/').join('_');
+		var id = $(e.target).parents('.resource').attr("id").split("testcase_")[1];
 
+		
+		$('#update_api_2_testcase_form .testcase_id').val(id);
 		$("#apiConfigs_template").tmpl(obj).appendTo(
 				"#update_api_2_testcase_form dl");
 		
 
 		var formData = form2js("update_api_2_testcase_form", '.', true);
 		var json2 = JSON.stringify(formData, null, '\t');
-		alert(json2);
+		
+		postJson("/add_api_to_testcase", json2, function(res) {
+			$("#testcase_list #resources #testcase_" + id + "_endpoint_list")
+					.html(res.responseText);
+		});
+		$('#update_api_2_testcase_form dl').empty();
 	},
 
 	add_expert_input : function(){

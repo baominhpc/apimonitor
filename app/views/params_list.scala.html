@@ -26,7 +26,9 @@
             	}
             </tbody>
           </table>
-          <input type="button" value="Save" class="save_operation" id="id_@operation.id">
+             @if(apis.size > 0){
+          		<input type="button" value="Save" class="save_operation" id="id_@operation.id">
+			}          
           @if(ver == ""){
               	         
         <div id="expert_frm_@id" class="expert_frm">

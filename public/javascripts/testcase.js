@@ -28,10 +28,28 @@ var TestCaseMain = Spine.Controller.sub({
 		if(!$(e.target).parents('.resource').find(".endpoints").is(":visible")){
 			$(e.target).parents('.resource').find("#get_detail_bt").trigger("click");
 		}
+		var lock = "true";
 		setTimeout(function(){
 			$(e.target).parents(".resource").find(".endpoint").each(function(){
-			
+				
+//			    var self = (this);
+//			    alert($(this).find(".operation").attr("id"));
+//				setTimeout(function(){
+//				alert($(this).find(".response_body").html().length );
+//				if(lock == "true"){
+//					$(this).find("form input[name=commit]").trigger("click");
+//					lock = "false";
+//				}
+//				while(lock == "false"){
+//					if($(this).find(".response_body").html().length > 0){
+//						lock = "true";
+//					}
+//				}
 				$(this).find("form input[name=commit]").trigger("click");
+//				$(this).find(".response_body").change(function(){
+//					alert("change");
+//				});
+//				},100);
 			});	
 		}, 100);
 		
@@ -115,17 +133,14 @@ var TestCaseMain = Spine.Controller.sub({
 
 		var formData = form2js("add_api_2_testcase_form", '.', true);
 		var json = JSON.stringify(formData, null, '\t');
-		alert(json);
 		var testcaseId = $('#add_api_2_testcase_form').find("input[name=id]").val();
 		postJson("/add_api_to_testcase", json, function(res) {
 			$("#testcase_list #resources #" + testcaseId + "_endpoint_list")
 					.html(res.responseText);
 		});
-//		//		
 		$('#resources_list').empty();
 		$('#add_api_2_testcase_form dl').empty();
 		$("#TB_closeWindowButton").trigger('click');
-
 	},
 	
 

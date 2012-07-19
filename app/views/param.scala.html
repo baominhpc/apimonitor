@@ -97,12 +97,16 @@
 					value='@param.value'  class="input"/></td>
 					<td class="type">@param.dataType</td>
 					@if(apis.size > 0){
-						<td><input name="needed_name"  /></td>
+						<td><input name="needed_name"  value="@param.needed_name"/></td>
 			<td>
 					<select name="needed_api">
 					@for(api <- apis){
 						@if(api.isDeleted == false){
-							<option  value="@(api.nickname)_@api.httpMethod">@api.id</option>
+							@if(api.nickname + "_" + api.httpMethod == param.needed_api){
+								<option selected  value="@(api.nickname)_@api.httpMethod">@api.id</option>
+							}else{
+								<option  value="@(api.nickname)_@api.httpMethod">@api.id</option>
+							}
 						}
 					}		
 					</select>
