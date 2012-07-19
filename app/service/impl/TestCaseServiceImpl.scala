@@ -2,16 +2,16 @@ package service.impl
 
 import scala.collection.mutable.ListBuffer
 import scala.reflect.BeanInfo
-
-  import com.mongodb.WriteConcern
-
-  import models.testcase.APIConfig
+import com.mongodb.WriteConcern
+import models.testcase.APIConfig
 import models.testcase.TestCase
 import models.APIOperation
 import models.APIParameter
 import service.AbstractService
 import service.TestCaseService
 import util.StringUtil
+import models.BaseKey
+import util.ConfigUtils
 
 
 
@@ -75,7 +75,6 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
   
   def getAPIsinTestCase(testCaseId: String): List[APIOperation] = {
     var testCase = testCaseDAO.findById(testCaseId)
-    		println("TEST CASE ============" + (testCase.apiConfigIds))
     if (testCase != null) {
       return getAPIsfromConfigs(testCase.apiConfigIds);
     }
@@ -89,14 +88,16 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
         var apiConfig = apiConfigDAO.findById(id)
         
         if (apiConfig != null) {
-          list += getAPIfromConfig(apiConfig)
+          val api = getAPIfromConfig(apiConfig)
+          if(api != null){
+            list+= api
+          }
         }
       })
       
       return list.toList;
   }
   private def getAPIfromConfig(apiConfig : APIConfig) : APIOperation = {
-    println("APICO++++++++++++++++++" + apiConfig.apiId)
     var api = apiOperationDAO.findById(apiConfig.apiId)
     
     if (api != null) {
@@ -129,6 +130,10 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
       api.expectedParameters = expectedParamList
       api.parameters = parameters
       api.expert_params = apiConfig.expert_params
+    }else{
+      api = new APIOperation
+      api.id = apiConfig.apiId
+      api.isDeleted = true
     }
     return api;
   }

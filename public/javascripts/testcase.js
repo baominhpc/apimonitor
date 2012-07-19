@@ -30,6 +30,7 @@ var TestCaseMain = Spine.Controller.sub({
 		}
 		setTimeout(function(){
 			$(e.target).parents(".resource").find(".endpoint").each(function(){
+			
 				$(this).find("form input[name=commit]").trigger("click");
 			});	
 		}, 100);
@@ -52,8 +53,19 @@ var TestCaseMain = Spine.Controller.sub({
 				.size();
 
 		var idform = $(e.target).parents(".endpoint").find(".content form").attr("id");
-		var formData = form2js(idform, '.', true);
-		var json = JSON.stringify(formData, null, '\t');
+		var json = "[";
+		$("#" + idform + " tbody tr").each(function(){
+			var name = $(this).find("input.input").attr("name");
+			var value = $(this).find("input.input").val();
+			json += "{\"name\":\"" + name + "\",\"value\":\"" + value + "\"},"  
+		});
+		if(json.length > 1){
+			json = json.substr(0, json.length-1);	
+		}
+		
+		json += "]";
+//		var formData = form2js(idform, '.', true);
+//		var json = JSON.stringify(formData, null, '\t');
 		
 		var exp_params = "{";
 		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
@@ -69,6 +81,7 @@ var TestCaseMain = Spine.Controller.sub({
 		var obj = new Object();
 		obj.index = countApiConfigs;
 		obj.exp_params = exp_params;
+		
 		obj.params =json;
 		obj.apiId = e.target.id.split("id_")[1];
 		obj.id = e.target.id.split("id_")[1].split('/').join('_');
@@ -112,12 +125,13 @@ var TestCaseMain = Spine.Controller.sub({
 
 		var formData = form2js("add_api_2_testcase_form", '.', true);
 		var json = JSON.stringify(formData, null, '\t');
+		alert(json);
 		var testcaseId = $('#add_api_2_testcase_form').find("input[name=id]").val();
-		postJson("/add_api_to_testcase", json, function(res) {
-			$("#testcase_list #resources #" + testcaseId + "_endpoint_list")
-					.append(res.responseText);
-		});
-		//		
+//		postJson("/add_api_to_testcase", json, function(res) {
+//			$("#testcase_list #resources #" + testcaseId + "_endpoint_list")
+//					.html(res.responseText);
+//		});
+//		//		
 		$('#resources_list').empty();
 		$('#add_api_2_testcase_form dl').empty();
 		$("#TB_closeWindowButton").trigger('click');

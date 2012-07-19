@@ -149,12 +149,49 @@ var Operation = Spine.Controller.sub({
 	events : {
 		"click .add_expert" : "add_expert_input",
 		"click h3" : "click",
-		"click .sandbox_header input.submit" : "call_api"
+		"click .sandbox_header input.submit" : "call_api",
+		"click .save_operation" : "update_operation"
 	},
 	
 	elements : {
 		".expert_params" : "expert_container",
 		".params_table"  : "params_table"
+	},
+	
+	update_operation : function(e){
+
+		var countApiConfigs = $('#update_api_2_testcase_form  .new_added_apis')
+				.size();
+
+		var idform = $(e.target).parents(".endpoint").find(".content form").attr("id");
+		var formData = form2js(idform, '.', true);
+		var json = JSON.stringify(formData, null, '\t');
+		
+		var exp_params = "{";
+		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
+			var name = $(this).find("input[name=name]").val();
+			var value = $(this).find("input[name=value]").val();
+			exp_params += "\"" + name + "\":\"" + value + "\",";
+			
+		});
+		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
+			exp_params = exp_params.substr(0, exp_params.length -1);
+		}
+		exp_params +="}";
+		var obj = new Object();
+		obj.index = countApiConfigs;
+		obj.exp_params = exp_params;
+		obj.params =json;
+		obj.apiId = e.target.id.split("id_")[1];
+		obj.id = e.target.id.split("id_")[1].split('/').join('_');
+
+		$("#apiConfigs_template").tmpl(obj).appendTo(
+				"#update_api_2_testcase_form dl");
+		
+
+		var formData = form2js("update_api_2_testcase_form", '.', true);
+		var json2 = JSON.stringify(formData, null, '\t');
+		alert(json2);
 	},
 
 	add_expert_input : function(){
@@ -175,6 +212,22 @@ var Operation = Spine.Controller.sub({
 		var error_free = true;
 		var missing_input = null;
 		var controller = this;
+		this.params_table.find("tbody tr").each(function(){
+			var needed_name = $(this).find("input[name=needed_name]").val();
+			var needed_api = $(this).find("select").val();
+			
+			if(needed_name != "" && needed_api != ""){
+				$(this).find("input.input").val("");
+				needed_name = "\"" + needed_name + "\":"
+				var response = $(this).parents(".resource").find("." + needed_api + " .response_body").html();
+				if(response.indexOf( needed_name ) != -1){
+					var temp = response.substring(response.indexOf( needed_name ));
+					var value = temp.split(",")[0].substring(needed_name.length).replace(/\"/g,"");
+					$(this).find("input.input").val(value);
+				}
+			}
+		});
+		
 		form.find("input.required").each(function() {
 
 			$(this).removeClass('error');

@@ -1,4 +1,4 @@
-@(param : models.APIParameter, apis : List[models.APIOperation] = List[models.APIOperation] )
+@(param : models.APIParameter, apis : List[models.APIOperation] = List[models.APIOperation]() )
  
 @*
 
@@ -15,13 +15,17 @@
 				<option value='${$value}'>${$value}</option> {{/if}} {{/each}}
 		</select></td>
 		<td class="type">@param.dataType</td>
+			@if(apis.size > 0){
 		<td><input name="needed_name"  /></td>
 		<td>
 			<select name="needed_api">
-			@for(api <- apis){
-				<option>@api</option>
-			}		
+				@for(api <- apis){
+						@if(api.isDeleted == false){
+							<option  value="@(api.nickname)_@api.httpMethod">@api.id</option>
+						}
+				}	
 			</select></td>
+			}
 		<td width='500'>@param.description</td>
 	</tr>
 }else{*@ 
@@ -31,24 +35,38 @@
 				<td class='code required'>@param.name</td>
 				<td>-</td>
 				<td class="type">@param.dataType</td>
+					@if(apis.size > 0){
 				<td><input name="needed_name"  /></td>
 				<td>
-				<select name="needed_api">
-					<option></option>		
-				</select></td>
+					<select name="needed_api">
+					@for(api <- apis){
+						@if(api.isDeleted == false){
+							<option   value="@(api.nickname)_@api.httpMethod">@api.id</option>
+						}
+					}		
+					</select>
+				</td>
+				}
 				<td width='500'>@param.description</td>
 			</tr>
 		}else{
 			<tr>
 				<td class='code required'>@param.name</td>
 				<td><input class='required' minlength='1' name='@param.name'
-					placeholder='(required)' type='text' value='@param.value' /></td>
+					placeholder='(required)' type='text' value='@param.value'  class="input"/></td>
 					<td class="type">@param.dataType</td>
+						@if(apis.size > 0){
 						<td><input name="needed_name"  /></td>
-		<td>
-			<select name="needed_api">
-				<option></option>		
-			</select></td>
+				<td>
+					<select name="needed_api">
+					@for(api <- apis){
+						@if(api.isDeleted == false){
+							<option  value="@(api.nickname)_@api.httpMethod">@api.id</option>
+						}
+					}	
+					</select>
+				</td>
+				}
 				<td width='500'><strong>@param.description</strong></td>
 			</tr>
 		}
@@ -58,24 +76,38 @@
 				<td class='code'>@param.name</td>
 				<td>-</td>
 				<td class="type">@param.dataType</td>
+					@if(apis.size > 0){
 					<td><input name="needed_name"  /></td>
-		<td>
-			<select name="needed_api">
-				<option></option>		
-			</select></td>
+			<td>
+					<select name="needed_api">
+					@for(api <- apis){
+						@if(api.isDeleted == false){
+							<option   value="@(api.nickname)_@api.httpMethod">@api.id</option>
+						}
+					}	
+					</select>
+				</td>
+				}
 				<td width='500'>@param.description</td>
 			</tr>
 		}else{
 			<tr>
 				<td class='code'>@param.name</td>
 				<td><input minlength='0' name='@param.name' placeholder='' type='text'
-					value='@param.value' /></td>
+					value='@param.value'  class="input"/></td>
 					<td class="type">@param.dataType</td>
+					@if(apis.size > 0){
 						<td><input name="needed_name"  /></td>
-		<td>
-			<select name="needed_api">
-				<option></option>		
-			</select></td>
+			<td>
+					<select name="needed_api">
+					@for(api <- apis){
+						@if(api.isDeleted == false){
+							<option  value="@(api.nickname)_@api.httpMethod">@api.id</option>
+						}
+					}		
+					</select>
+				</td>
+				}
 				<td width='500'>@param.description</td>
 			</tr>
 		}

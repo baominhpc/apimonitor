@@ -31,10 +31,8 @@ object TestCaseApplication extends AbstractController {
 
 
   def getAPIsinTestCase(id: String) = Action { request =>
-    println("=====================================")
-    println("test=====" + testCaseService.getAPIsinTestCase(id))
     Ok(views.html.apis_list_in_testcase("testcase_" + id, id, testCaseService.getAPIsinTestCase(id)))
-
+//      Ok(views.html.apis_list_in_testcase(testCaseService.getAPIsinTestCase(id)))
   }
 
   def addTestCase = Action(parse.json) { request =>
@@ -49,8 +47,9 @@ object TestCaseApplication extends AbstractController {
   def addAPI2TestCase = Action(parse.json) { request =>
 
     var testCase = SJSON.in[TestCase](Js(request.body.toString()))
+    testCaseService.addAPI2TestCase(testCase)
 
-    Ok(views.html.apis_list_in_testcase("testcase_" + testCase.id, testCase.id, testCaseService.addAPI2TestCase(testCase)))
+    Ok(views.html.apis_list_in_testcase("testcase_" + testCase.id, testCase.id,   testCaseService.getAPIsinTestCase(testCase.id)))
 
   }
   

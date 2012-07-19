@@ -9,16 +9,17 @@ import com.mongodb.casbah.WriteConcern
 import com.mongodb.casbah.commons.MongoDBList
 
 
-class MongoSalatDAO[ObjectType <: AnyRef, ID <: AnyRef](collectionName: String)(implicit mot: Manifest[ObjectType], mid: Manifest[ID], ctx: Context) extends 
+class MongoSalatDAO[ObjectType >: Null <: AnyRef, ID <: AnyRef](collectionName: String)(implicit mot: Manifest[ObjectType], mid: Manifest[ID], ctx: Context) extends 
 	SalatDAO[ObjectType, ID](collection = MongoConnection("mongo01b",27017)("mobion")(collectionName))(mot, mid, ctx) with FluidQueryBarewordOps{
   collection.getDB().authenticate("mobion","mobion!life")
   
   def findAll() = {
-    var result = find(MongoDBObject())
+    val result = find(MongoDBObject())
     if (result == None) {
       null
+    }else{
+      result.toList      
     }
-    result.toList
   }
   
   def findbyProperty(key : String, value : String) = {
@@ -26,27 +27,27 @@ class MongoSalatDAO[ObjectType <: AnyRef, ID <: AnyRef](collectionName: String)(
   }
   
   def findbyProperty(key : String, id:BaseKey) = {
-    var tmp = MongoDBObject(key + ".path" -> id.path , key + ".version" -> id.version)
-    println(tmp)
+    val tmp = MongoDBObject(key + ".path" -> id.path , key + ".version" -> id.version)
 	find(tmp).toList
-    
   }
   
-  def findById(id:String) = {
-    var result = findOne(MongoDBObject("_id" -> id))
+  def findById(id:String) : ObjectType = {
+    val result = findOne(MongoDBObject("_id" -> id))
     if(result == None){
-      null
+      return null
+    }else{
+      return result.get
     }
-    result.get
+    
   }
   
   def deleteById(id :ID){
     removeById(id, WriteConcern.Safe)
   }
   def findLimit(start:Int,size:Int) : List[ObjectType] = {
-    var c = find(MongoDBObject()).skip(start).limit(size)
+    val c = find(MongoDBObject()).skip(start).limit(size)
     if (c == None) {
-      null
+      return null
     }
     return c.toList
   }
@@ -61,29 +62,29 @@ class MongoSalatDAO[ObjectType <: AnyRef, ID <: AnyRef](collectionName: String)(
     update(MongoDBObject("_id" -> id),pull)
   }
   
-  def findById(id:BaseKey) = {
-	var result = findOne(MongoDBObject("_id.path" -> id.path , "_id.version" -> id.version))
+  def findById(id:BaseKey):ObjectType = {
+	val result = findOne(MongoDBObject("_id.path" -> id.path , "_id.version" -> id.version))
     if(result == None){
-      null
-    }
-	result.get
+      return null
+    }else{
+      return result.get
+    }	
   }
   
   def findAndOrder(order:Int,start:Int,size:Int) = {
-    var result = find(MongoDBObject()).sort(orderBy = MongoDBObject("_id" -> -1)).skip(start).limit(size)
-    println(result)
+    val result = find(MongoDBObject()).sort(orderBy = MongoDBObject("_id" -> -1)).skip(start).limit(size)
     if (result == None) {
       null
     }
     result.toList
   }
   
-  def findById(id:String,start:Int,size:Int) = {
+  def findById(id:String,start:Int,size:Int):List[ObjectType] = {
     var result = find(MongoDBObject("_id" -> id)).skip(start).limit(size)
     if(result == None){
-      null
+      return null
     }
-    result.toList
+    return result.toList
   }
   
   def countLike(field:String, value:String) = {
@@ -91,13 +92,14 @@ class MongoSalatDAO[ObjectType <: AnyRef, ID <: AnyRef](collectionName: String)(
     count(MongoDBObject(field -> regex.r))
   }
   
-  def findLike(field:String, value:String) = {
+  def findLike(field:String, value:String):List[ObjectType] = {
     var regex = ".*" + value + ".*"
     var result = find(MongoDBObject(field -> regex.r))
     if(result == None){
-      null
+      return null
+    }else{
+      return result.toList      
     }
-    result.toList
   }
   
   def findByMultiCondition(connector:String, conditions:List[MongoDBObject] = List[MongoDBObject]()){

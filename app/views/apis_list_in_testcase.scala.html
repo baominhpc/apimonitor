@@ -1,6 +1,8 @@
 @(parentId : String, id : String, apis : List[models.APIOperation] )
 @for(api <- apis){ 
+	@if(api.isDeleted == false){
 		@api_in_testcase(parentId, api, id, apis)
+	}
 }
 	
 

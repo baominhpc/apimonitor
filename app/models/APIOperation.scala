@@ -21,7 +21,8 @@ import com.novus.salat.annotations._
   resPath: String = null,
   var expert_params:String = null,
   @Ignore var expectedParameters: List[APIParameter] = List[APIParameter](),
-  @Ignore var apiConfigId:String="") extends BaseBean(id) {
+  @Ignore var apiConfigId:String="",
+  var isDeleted:Boolean  = false) extends BaseBean(id) {
 
 
   def this() = {
