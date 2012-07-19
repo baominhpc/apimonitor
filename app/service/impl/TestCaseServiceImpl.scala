@@ -108,7 +108,7 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
         	val key = param.name
             if (map.get(key) != None) {
               val mapValue = map.get(key).get
-              val values = mapValue.split("|")
+              val values = mapValue.split("___")
               if(values != null){
                   param.value =values(0)
                   if(values.length > 1){
