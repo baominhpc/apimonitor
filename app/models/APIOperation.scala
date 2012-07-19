@@ -22,6 +22,7 @@ import com.novus.salat.annotations._
   var expert_params:String = null,
   @Ignore var expectedParameters: List[APIParameter] = List[APIParameter](),
   @Ignore var apiConfigId:String="",
+  var apiVersion:String = "",
   var isDeleted:Boolean  = false) extends BaseBean(id) {
 
 
