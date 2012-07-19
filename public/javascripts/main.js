@@ -164,9 +164,22 @@ var Operation = Spine.Controller.sub({
 				.size();
 
 		var idform = $(e.target).parents(".endpoint").find(".content form").attr("id");
-		var formData = form2js(idform, '.', true);
-		var json = JSON.stringify(formData, null, '\t');
+		var json = "{";
+		$("#" + idform + " tbody tr").each(function(){
+			var name = $(this).find("input.input").attr("name");
+			var value = $(this).find("input.input").val();
+			var needed_name = $(this).find("input[name=needed_name]").val();
+			var needed_api = $(this).find("select").val();
+			if(needed_name != ""){
+				value += "___" + needed_name + "___" + needed_api;
+			}
+			json += "\"" + name + "\":\"" + value + "\","  
+		});
+		if(json.length > 1){
+			json = json.substr(0, json.length-1);	
+		}
 		
+		json += "}";
 		var exp_params = "{";
 		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
 			var name = $(this).find("input[name=name]").val();
