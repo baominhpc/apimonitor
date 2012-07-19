@@ -2,7 +2,6 @@
 @defining(util.StringUtil.formatId(parentId + "_" + id + "_" + operation.nickname + "_" + operation.httpMethod + ver)) { op_id =>
 <li class="@operation.httpMethod.toLowerCase() operation @(operation.nickname)_@operation.httpMethod "
 	id="@op_id">
-	
 	<div class='heading'>
 		<h3>
 			<span class='http_method'> <a href="javascript:void(0)">@operation.httpMethod</a></span>
@@ -35,7 +34,8 @@
 			id : id,
 			testcase_id : "@idTestcase",
 			path : "@apiPath",
-			http_method: "@operation.httpMethod.toLowerCase()"
+			http_method: "@operation.httpMethod.toLowerCase()",
+			version    : "@operation.apiVersion"
 			
 		}); 
 	</script>

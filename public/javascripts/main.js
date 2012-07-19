@@ -240,7 +240,7 @@ var Operation = Spine.Controller.sub({
 				$(this).find("input.input").val("");
 				needed_name = "\"" + needed_name + "\":"
 				var response = $(this).parents(".resource").find("." + needed_api + " .response_body").html();
-				if(response.indexOf( needed_name ) != -1){
+				if(response != null && response.indexOf( needed_name ) != -1){
 					var temp = response.substring(response.indexOf( needed_name ));
 					var value = temp.split(",")[0].substring(needed_name.length).replace(/\"/g,"");
 					$(this).find("input.input").val(value);
@@ -274,15 +274,13 @@ var Operation = Spine.Controller.sub({
 			} else {
 				
 				var postParams = this.invocationPostParam(form.serializeArray());
-			
-				
-				var version = "v2";
 				var data;
-				if(version == "v1"){
-					postParams = "params=" + postParams ;
+				if(this.version == "1.0"){
+					data = "params=" + postParams ;
 				}else{
 					data = $.parseJSON(postParams);
 				}
+				console.log(postParams);
 				$.post(invocationUrl , (data),
 						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
 						.error(this.proxy(this.showErrorStatus));
@@ -414,7 +412,7 @@ var Operation = Spine.Controller.sub({
 		}
 		
 		var postParam = "";
-		var version = "v2";
+		var version = this.version;
 		for(var name in formValuesMap){
 			
 			var value = jQuery.trim(formValuesMap[name]);
