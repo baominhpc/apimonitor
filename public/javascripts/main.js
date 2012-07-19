@@ -280,7 +280,6 @@ var Operation = Spine.Controller.sub({
 				}else{
 					data = $.parseJSON(postParams);
 				}
-				console.log(postParams);
 				$.post(invocationUrl , (data),
 						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
 						.error(this.proxy(this.showErrorStatus));
@@ -324,8 +323,9 @@ var Operation = Spine.Controller.sub({
 			if(value == "" && name == ""){
 				$(this).removeClass();
 			}else{
-				var strSearch = value == "" ? "\\\"" + name + "\\\":"  : "\\\"" + name + "\\\":\\\"" + value + "\\\"";
-				if(res.indexOf(strSearch) == -1){
+				
+				var strSearch = value == "" ? "\"" + name + "\": "  : "\"" + name + "\":\"" + value + "\"";
+				if(response_body.indexOf(strSearch) == -1){
 					$(this).addClass("not_found");
 				}else{
 					$(this).removeClass();

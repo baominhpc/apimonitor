@@ -46,6 +46,7 @@ var TestCaseMain = Spine.Controller.sub({
 //					}
 //				}
 				$(this).find("form input[name=commit]").trigger("click");
+				setTimeout(function(){},1000);
 //				$(this).find(".response_body").change(function(){
 //					alert("change");
 //				});
