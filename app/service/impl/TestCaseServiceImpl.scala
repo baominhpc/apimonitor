@@ -107,7 +107,15 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
         parameters.foreach(param => {
         	val key = param.name
             if (map.get(key) != None) {
-              param.value = map.get(key).get
+              val mapValue = map.get(key).get
+              val values = mapValue.split("|")
+              if(values != null){
+                  param.value =values(0)
+                  if(values.length > 1){
+                   param.needed_name = values(1)
+                   param.needed_api = values(2)
+                  }
+              }
             }
           }
         )
