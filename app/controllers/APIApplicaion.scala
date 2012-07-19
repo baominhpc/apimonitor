@@ -114,4 +114,8 @@ object APIApplication extends AbstractController {
      val list = versionTrackingService.getAPIREsourceListOfVersion(version)
      Ok(views.html.resources_list(list))
   }
+   
+  def searchAPI(version:String,keyword:String) = Action{
+    Ok(apiResourceService.searchOperation(version,keyword).toString())
+  }
 }

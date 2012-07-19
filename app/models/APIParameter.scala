@@ -16,7 +16,9 @@ import com.novus.salat.annotations._
     var value:String = "",
     var max:String = "",
     var min:String = "",
-    var options:String = ""){
+    var options:String = "",
+    var needed_name:String = "",
+    var needed_api:String = ""){
   
   def this() = {
     this(new BaseKey(),"","",false,"",false,"", false,new BaseKey("",""),"","","","");

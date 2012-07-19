@@ -161,5 +161,17 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
     }
     return resources
   }
+  
+  def searchOperation(version:String,keyword:String):List[APIOperation] = {
+    var lastestVersion = version
+    if(StringUtil.isBlank(lastestVersion)){
+      val listVersion = apiVersionTrackingDAO.findAndOrder(StringUtil.Order.DESC, 0, StringUtil.MAXINT)
+      if (listVersion == null) {
+        null
+      }
+      lastestVersion = listVersion(0).id
+    }
+    return apiOperationDAO.searchByKeyword(lastestVersion,keyword)
+  }
 
 }
