@@ -32,13 +32,16 @@ function loadConfig(){
 	}
 }
 
+
 var Main = Spine.Controller.sub({
 	init : function() {
 		
 		loadConfig();
 		Main.getAPI();
 		
-		$('#explore').click(Main.getAPI);
+		$('#explore').click(function(){
+			Main.getAPI();
+		});
 	},
 
 	elements : {
@@ -81,10 +84,15 @@ Main.extend({
 		$("#content_message").html("Loading...");
 		$("#resources_list").slideUp();
 		$("#content_message").slideDown();
-	
+		
+		var urlCall = "";
+		if(keyword != ""){
+			urlCall = '/getapi?url=' + encodeURIComponent(url) + "&version=" + version + "&keyword=" + keyword;
+		}else{
+			urlCall = '/get_list_name_resource?url=' + encodeURIComponent(url) + "&version=" + version;
+		}
 		var controller = this;
-		$('#resources_list').load('/get_list_name_resource?url=' + encodeURIComponent(url) + "&version=" + version,
-				null, function() {
+		$('#resources_list').load(urlCall,null, function() {
 					$("#content_message").slideUp();
 					$("#resources_list").slideDown();
 					if (supportsLocalStorage()) {
@@ -227,7 +235,7 @@ var Operation = Spine.Controller.sub({
 		
 	},
 
-	call_api : function() {
+	call_api : function(e) {
 		var form = $("#" + this.id + "_form");
 		var error_free = true;
 		var missing_input = null;
@@ -263,10 +271,11 @@ var Operation = Spine.Controller.sub({
 		});
 
 		if (error_free) {
+			console.log("test");
 			var invocationUrl = this.invocationUrl(form.serializeArray(), this.http_method);
 			$(".request_url", this.target + "_content_sandbox_response")
 					.html("<pre>" + invocationUrl + "</pre>");
-
+			console.log(invocationUrl);
 			if (this.http_method == "get") {
 				$.getJSON(invocationUrl, this.proxy(this.showResponse))
 						.complete(this.proxy(this.showCompleteStatus)).error(
@@ -286,6 +295,8 @@ var Operation = Spine.Controller.sub({
 			}
 
 		}
+		
+	
 		
 	
 	},
@@ -350,6 +361,16 @@ var Operation = Spine.Controller.sub({
 		$(".response_headers", this.target + "_content_sandbox_response")
 				.html("<pre>" + data.getAllResponseHeaders() + "</pre>");
 		$(this.target + "_content_sandbox_response").slideDown();
+		
+		//runner
+		if($(this.target).parents(".resource").find(".run").html().length > 0){
+			$(this.target).parents(".endpoint").next().find('input.submit').trigger("click");
+//			alert($(this.target).parents(".endpoint").next().html());
+			if($(this.target).parents(".endpoint").next().html()== null){
+				$(this.target).parents(".resource").find(".run").removeClass("run");
+			}
+		}
+		
 	},
 
 	invocationUrl : function(formValues, method) {
@@ -361,9 +382,12 @@ var Operation = Spine.Controller.sub({
 		}
 
 		var urlTemplateText = this.path.split("{").join("${");
+//		var urlTemplateText = this.path.split("{").join("").split("}").join("");
+		 
 		var urlTemplate = $.template(null, urlTemplateText);
+//		console.log(urlTemplate);
 		var url = $.tmpl(urlTemplate, formValuesMap)[0].data;
-
+		console.log(url);
 		var queryParams = "";
 		var apiKey = Main.token;
 		if (apiKey) {

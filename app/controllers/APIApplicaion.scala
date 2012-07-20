@@ -65,7 +65,7 @@ object APIApplication extends AbstractController {
 //        list ::= resource
 //      }
 //    })
-    Ok(views.html.resources_list(list))
+    Ok(views.html.resources_list(list,"ver"))
   }
   
   def getResources(start: String, size: String, rest: String,version:String) = Action {
