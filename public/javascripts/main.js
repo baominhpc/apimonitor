@@ -149,12 +149,69 @@ var Operation = Spine.Controller.sub({
 	events : {
 		"click .add_expert" : "add_expert_input",
 		"click h3" : "click",
-		"click .sandbox_header input.submit" : "call_api"
+		"click .sandbox_header input.submit" : "call_api",
+		"click .save_operation" : "update_operation"
 	},
 	
 	elements : {
 		".expert_params" : "expert_container",
 		".params_table"  : "params_table"
+	},
+	
+	update_operation : function(e){
+
+		var countApiConfigs = $('#update_api_2_testcase_form  .new_added_apis')
+				.size();
+
+		var idform = $(e.target).parents(".endpoint").find(".content form").attr("id");
+		var json = "{";
+		$("#" + idform + " tbody tr").each(function(){
+			var name = $(this).find("input.input").attr("name");
+			var value = $(this).find("input.input").val();
+			var needed_name = $(this).find("input[name=needed_name]").val();
+			var needed_api = $(this).find("select").val();
+			if(needed_name != ""){
+				value += "___" + needed_name + "___" + needed_api;
+			}
+			json += "\"" + name + "\":\"" + value + "\","  
+		});
+		if(json.length > 1){
+			json = json.substr(0, json.length-1);	
+		}
+		
+		json += "}";
+		var exp_params = "{";
+		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
+			var name = $(this).find("input[name=name]").val();
+			var value = $(this).find("input[name=value]").val();
+			exp_params += "\"" + name + "\":\"" + value + "\",";
+			
+		});
+		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
+			exp_params = exp_params.substr(0, exp_params.length -1);
+		}
+		exp_params +="}";
+		var obj = new Object();
+		obj.index = countApiConfigs;
+		obj.exp_params = exp_params;
+		obj.params =json;
+		obj.apiId = e.target.id.split("id_")[1];
+		var id = $(e.target).parents('.resource').attr("id").split("testcase_")[1];
+
+		
+		$('#update_api_2_testcase_form .testcase_id').val(id);
+		$("#apiConfigs_template").tmpl(obj).appendTo(
+				"#update_api_2_testcase_form dl");
+		
+
+		var formData = form2js("update_api_2_testcase_form", '.', true);
+		var json2 = JSON.stringify(formData, null, '\t');
+		
+		postJson("/add_api_to_testcase", json2, function(res) {
+			$("#testcase_list #resources #testcase_" + id + "_endpoint_list")
+					.html(res.responseText);
+		});
+		$('#update_api_2_testcase_form dl').empty();
 	},
 
 	add_expert_input : function(){
@@ -170,11 +227,27 @@ var Operation = Spine.Controller.sub({
 		
 	},
 
-	call_api : function(e) {
+	call_api : function() {
 		var form = $("#" + this.id + "_form");
 		var error_free = true;
 		var missing_input = null;
 		var controller = this;
+		this.params_table.find("tbody tr").each(function(){
+			var needed_name = $(this).find("input[name=needed_name]").val();
+			var needed_api = $(this).find("select").val();
+			
+			if(needed_name != "" && needed_api != ""){
+				$(this).find("input.input").val("");
+				needed_name = "\"" + needed_name + "\":";
+				var response = $(this).parents(".resource").find("." + needed_api + " .response_body").html();
+				if(response != null && response.indexOf( needed_name ) != -1){
+					var temp = response.substring(response.indexOf( needed_name ));
+					var value = temp.split(",")[0].substring(needed_name.length).replace(/\"/g,"");
+					$(this).find("input.input").val(value);
+				}
+			}
+		});
+		
 		form.find("input.required").each(function() {
 
 			$(this).removeClass('error');
@@ -201,16 +274,13 @@ var Operation = Spine.Controller.sub({
 			} else {
 				
 				var postParams = this.invocationPostParam(form.serializeArray());
-			
-				
-				var version = "v2";
 				var data;
-				if(version == "v1"){
+				if(this.version == "1.0"){
 					data = "params=" + postParams ;
 				}else{
 					data = $.parseJSON(postParams);
 				}
-				$.post(invocationUrl , $.parseJSON(data),
+				$.post(invocationUrl , (data),
 						this.proxy(this.showResponse)).complete(this.proxy(this.showCompleteStatus))
 						.error(this.proxy(this.showErrorStatus));
 			}
@@ -253,8 +323,9 @@ var Operation = Spine.Controller.sub({
 			if(value == "" && name == ""){
 				$(this).removeClass();
 			}else{
-				var strSearch = value == "" ? "\\\"" + name + "\\\":"  : "\\\"" + name + "\\\":\\\"" + value + "\\\"";
-				if(res.indexOf(strSearch) == -1){
+				
+				var strSearch = value == "" ? "\"" + name + "\": "  : "\"" + name + "\":\"" + value + "\"";
+				if(response_body.indexOf(strSearch) == -1){
 					$(this).addClass("not_found");
 				}else{
 					$(this).removeClass();
@@ -341,7 +412,7 @@ var Operation = Spine.Controller.sub({
 		}
 		
 		var postParam = "";
-		var version = "v2";
+		var version = this.version;
 		for(var name in formValuesMap){
 			
 			var value = jQuery.trim(formValuesMap[name]);

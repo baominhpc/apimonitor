@@ -119,22 +119,45 @@ var VersionCompare = Spine.Controller.sub({
 	
 	compareInSide : function(self, controller){
 		var controller = this;
-		self.find(".resource .endpoints .endpoint .operation").each(function(){
-			var id = $(this).attr("id");
-			var idCompare = id;
-			idCompare.replace("list2", "list1");
-			if($("#" + idCompare).length == 0){
-				$(this).parents(".resource").find("div.heading:first").addClass("diff_item");
-				
-				$("#" + id).find('div.heading:first').addClass("diff_item");
+		//compare resource
+		self.find(".resource").each(function(){
+			var resourceId = $(this).attr("id");
+			var resourceCompareId = "";
+			if(resourceId.indexOf("list2")!=-1){
+				resourceCompareId = resourceId.replace("list2", "list1");	
 			}else{
-				//compare params
-				controller.compareParams(id, idCompare);
-					
+				var resourceCompareId = resourceId.replace("list1", "list2");
 			}
 			
-			
+			if($('#' + resourceCompareId).length == 0){
+				$(this).find("div.heading:first").addClass("diff_item");
+			}else{
+				$(this).find(".endpoints .endpoint .operation").each(function(){
+					var id = $(this).attr("id");
+					var idCompare = id;
+					if(id.indexOf("list2")!=-1){
+						idCompare.replace("list2", "list1");	
+					}else{
+						idCompare.replace("list1", "list2");
+					}
+					
+					if($("#" + idCompare).length == 0){
+						$(this).parents(".resource").find("div.heading:first").addClass("diff_item");
+						
+						$("#" + id).find('div.heading:first').addClass("diff_item");
+					}else{
+						//compare params
+						controller.compareParams(id, idCompare);
+							
+					}
+				});
+			}
 		});
+		//compare operation
+		
+			
+			
+		
 	},
 	
 	compareParams : function(id, idCompare){
