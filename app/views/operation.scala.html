@@ -19,6 +19,7 @@
 			}
 		</ul>
 		<input type="hidden" name="apiConfigId" value="@operation.apiConfigId"/>
+		<input type="hidden" name="operation_params"  value="@(op_id)|@(idTestcase)|@(apiPath)|@(operation.httpMethod.toLowerCase())|@(operation.apiVersion)"  />
 	</div> 
 	
 	<script type="text/javascript">

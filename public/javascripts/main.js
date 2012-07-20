@@ -227,7 +227,7 @@ var Operation = Spine.Controller.sub({
 		
 	},
 
-	call_api : function(e) {
+	call_api : function() {
 		var form = $("#" + this.id + "_form");
 		var error_free = true;
 		var missing_input = null;
@@ -238,7 +238,7 @@ var Operation = Spine.Controller.sub({
 			
 			if(needed_name != "" && needed_api != ""){
 				$(this).find("input.input").val("");
-				needed_name = "\"" + needed_name + "\":"
+				needed_name = "\"" + needed_name + "\":";
 				var response = $(this).parents(".resource").find("." + needed_api + " .response_body").html();
 				if(response != null && response.indexOf( needed_name ) != -1){
 					var temp = response.substring(response.indexOf( needed_name ));
