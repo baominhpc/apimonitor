@@ -29,34 +29,34 @@
              @if(apis.size > 0){
           		<input type="button" value="Save" class="save_operation" id="id_@operation.id">
 			}          
-          @if(ver == ""){
+         @if(ver == ""){
               	         
-        <div id="expert_frm_@id" class="expert_frm">
-        	<h4>Expect Params</h4>
-   
-        	 <table class='fullwidth'>
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th style="width:48%;">Value</th>
-                
-              </tr>
-            </thead>
-            <tbody class="expert_params">
-            @if(operation.expert_params != null){
-       			@for(ep <- operation.expectedParameters){
-					@expert_param(ep)
-       			}
-     		}
-            </tbody>
-          </table>
-
-          <input type="button" value="Add" class="add_expert"/>
-        </div>
+	        <div id="expert_frm_@id" class="expert_frm">
+	        	<h4>Expect Params</h4>
+	   
+	        	 <table class='fullwidth'>
+	            <thead>
+	              <tr>
+	                <th>Parameter</th>
+	                <th style="width:48%;">Value</th>
+	                
+	              </tr>
+	            </thead>
+	            <tbody class="expert_params">
+	            @if(operation.expert_params != null){
+	       			@for(ep <- operation.expectedParameters){
+						@expert_param(ep)
+	       			}
+	     		}
+	            </tbody>
+	          </table>
+	
+	          <input type="button" value="Add" class="add_expert"/>
+	        </div>
         }
                 
           <div class='sandbox_header' id="@id&#95content_sandbox_response_header">
-          @if(ver == ""){
+          @if(ver == "" || ver == "search"){
             <input class='submit' id="@id&#95content_sandbox_response_button" name='commit' type='button' value='Try it out!' />
            }
             <a href='#' id="@id&#95content_sandbox_response_hider" 

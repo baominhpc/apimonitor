@@ -202,6 +202,7 @@ var Operation = Spine.Controller.sub({
 		var obj = new Object();
 		obj.index = countApiConfigs;
 		obj.exp_params = exp_params;
+		obj.apiConfigId = this.apiConfigId;
 		obj.params =json;
 		obj.apiId = e.target.id.split("id_")[1];
 		var id = $(e.target).parents('.resource').attr("id").split("testcase_")[1];
@@ -214,7 +215,7 @@ var Operation = Spine.Controller.sub({
 
 		var formData = form2js("update_api_2_testcase_form", '.', true);
 		var json2 = JSON.stringify(formData, null, '\t');
-		
+		alert(json2);
 		postJson("/add_api_to_testcase", json2, function(res) {
 			$("#testcase_list #resources #testcase_" + id + "_endpoint_list")
 					.html(res.responseText);

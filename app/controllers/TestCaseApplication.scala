@@ -31,7 +31,6 @@ object TestCaseApplication extends AbstractController {
 
 
   def getAPIsinTestCase(id: String) = Action { request =>
-    println("======" +testCaseService.getAPIsinTestCase(id))
     Ok(views.html.apis_list_in_testcase("testcase_" + id, id, testCaseService.getAPIsinTestCase(id)))
   }
 
