@@ -1,4 +1,4 @@
 @(parentId: String, id: String, apiPath : String, operations : List[models.APIOperation], ver : String = "")
 <ul class='operations' id="@id&#95endpoint&#95operations@ver">
-	@for(op <-operations){ @operation(parentId, id, apiPath ,op, true, ver) }
+	@for(op <-operations){ @operation(parentId, id, apiPath ,op, true, "", ver, List[models.APIOperation]()) }
 </ul>

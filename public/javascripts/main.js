@@ -244,7 +244,7 @@ var Operation = Spine.Controller.sub({
 			var needed_name = $(this).find("input[name=needed_name]").val();
 			var needed_api = $(this).find("select").val();
 			
-			if(needed_name != "" && needed_api != ""){
+			if(needed_name != null && needed_api != null && needed_name != "" && needed_api != ""){
 				$(this).find("input.input").val("");
 				needed_name = "\"" + needed_name + "\":";
 				var response = $(this).parents(".resource").find("." + needed_api + " .response_body").html();
@@ -271,11 +271,17 @@ var Operation = Spine.Controller.sub({
 		});
 
 		if (error_free) {
-			console.log("test");
 			var invocationUrl = this.invocationUrl(form.serializeArray(), this.http_method);
 			$(".request_url", this.target + "_content_sandbox_response")
 					.html("<pre>" + invocationUrl + "</pre>");
-			console.log(invocationUrl);
+	
+			if(this.version == "1.0"){
+				if(this.path.indexOf("{token}")!= -1){
+//					invocationUrl = invocationUrl.replace
+				}
+//				invocationUrl = invocationUrl.replace("/?", "?");
+			}
+			console.log("url=" + invocationUrl);
 			if (this.http_method == "get") {
 				$.getJSON(invocationUrl, this.proxy(this.showResponse))
 						.complete(this.proxy(this.showCompleteStatus)).error(
@@ -363,7 +369,9 @@ var Operation = Spine.Controller.sub({
 		$(this.target + "_content_sandbox_response").slideDown();
 		
 		//runner
-		if($(this.target).parents(".resource").find(".run").html().length > 0){
+		var runner = $(this.target).parents(".resource").find(".run").html();
+		
+		if(runner != null && runner.length > 0){
 			$(this.target).parents(".endpoint").next().find('input.submit').trigger("click");
 //			alert($(this.target).parents(".endpoint").next().html());
 			if($(this.target).parents(".endpoint").next().html()== null){
@@ -374,20 +382,32 @@ var Operation = Spine.Controller.sub({
 	},
 
 	invocationUrl : function(formValues, method) {
+		var path = this.path;
 		var formValuesMap = new Object();
 		for ( var i = 0; i < formValues.length; i++) {
 			var formValue = formValues[i];
 			if (formValue.value && jQuery.trim(formValue.value).length > 0)
 				formValuesMap[formValue.name] = formValue.value;
 		}
-
-		var urlTemplateText = this.path.split("{").join("${");
+		
+		if(this.version == "1.0"){
+		
+			if(this.path.indexOf("{token}") != -1){
+				console.log(formValuesMap["token"]);
+				if(formValuesMap["token"] == null){
+					console.log("token = " + Main.token);
+					path = this.path.replace("{token}", Main.token);
+				}
+			}
+		}
+		
+		var urlTemplateText = path.split("{").join("${");
 //		var urlTemplateText = this.path.split("{").join("").split("}").join("");
 		 
 		var urlTemplate = $.template(null, urlTemplateText);
 //		console.log(urlTemplate);
+		
 		var url = $.tmpl(urlTemplate, formValuesMap)[0].data;
-		console.log(url);
 		var queryParams = "";
 		var apiKey = Main.token;
 		if (apiKey) {
@@ -447,7 +467,7 @@ var Operation = Spine.Controller.sub({
 				valArr = value.split(",");
 				
 			}
-			if(version == "v1" && dataType == "String[]"){
+			if(version == "1.0" && dataType == "String[]"){
 				var listFormatParam = "\"" + name + "\":[";
 				for(var i in valArr){
 					
@@ -479,7 +499,6 @@ var Operation = Spine.Controller.sub({
 		if (postParam.length > 0) {
 			postParam = postParam.substring(0, postParam.length - 1) + "}";
 		}
-		console.log(postParam);
 		return postParam;
 	},
 	

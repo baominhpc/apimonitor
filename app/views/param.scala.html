@@ -52,7 +52,7 @@
 		}else{
 			<tr>
 				<td class='code required'>@param.name</td>
-				<td><input class='required' minlength='1' name='@param.name'
+				<td><input class='required' minlength='1' name='@param.name.replaceAllLiterally("class","clazz")'
 					placeholder='(required)' type='text' value='@param.value'  class="input"/></td>
 					<td class="type">@param.dataType</td>
 						@if(apis.size > 0){
@@ -93,7 +93,7 @@
 		}else{
 			<tr>
 				<td class='code'>@param.name</td>
-				<td><input minlength='0' name='@param.name' placeholder='' type='text'
+				<td><input minlength='0' name='@param.name.replaceAllLiterally("class","clazz")' placeholder='' type='text'
 					value='@param.value'  class="input"/></td>
 					<td class="type">@param.dataType</td>
 					@if(apis.size > 0){

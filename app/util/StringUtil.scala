@@ -54,6 +54,7 @@ object StringUtil{
       ret = ret.replaceAllLiterally("{","_")
       ret = ret.replaceAllLiterally("}","_")
       ret = ret.replaceAllLiterally(" ","")
+      ret = ret.replaceAllLiterally("class","clazz")
     }
     
     return ret
