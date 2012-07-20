@@ -25,56 +25,13 @@ var TestCaseMain = Spine.Controller.sub({
 	},
 
 	runTestcase : function(e){
+		$(e.target).addClass("run");
 		if(!$(e.target).parents('.resource').find(".endpoints").is(":visible")){
 			$(e.target).parents('.resource').find("#get_detail_bt").trigger("click");
 		}
 		setTimeout(function(){
-			$(e.target).parents(".resource").find(".endpoint").each(function(){
-				var input = $(this).find("input[name=operation_params]").val();
-				var arr = input.split("|");
-				var id = arr[0];
-				var testCase_id = arr[1];
-				var apiPath = arr[2];
-				var httpMethod = arr[3];
-				var version = arr[4]; 
-				var el = $("#testcase_" + testCase_id +  " #" + id);
-				
-				var operation =  new Operation({
-					
-					el: el,
-					id : id,
-					testcase_id : testCase_id,
-					path : apiPath,
-					http_method: httpMethod,
-					version    : version,
-					
-				}); 
-				
-				operation.call_api();
-				
-				
-				//			    var self = (this);
-//			    alert($(this).find(".operation").attr("id"));
-//				setTimeout(function(){
-//				alert($(this).find(".response_body").html().length );
-//				if(lock == "true"){
-//					$(this).find("form input[name=commit]").trigger("click");
-//					lock = "false";
-//				}
-//				while(lock == "false"){
-//					if($(this).find(".response_body").html().length > 0){
-//						lock = "true";
-//					}
-//				}
-				$(this).find("form input[name=commit]").trigger("click");
-//				setTimeout()
-//				$(this).find(".response_body").change(function(){
-//					alert("change");
-//				});
-//				},100);
-			});	
-		}, 1000);
-		
+			$(e.target).parents(".resource").find(".endpoint:first form input[name=commit]").trigger("click");
+		},150);
 	},
 
 	removeOpeItem : function(e) {

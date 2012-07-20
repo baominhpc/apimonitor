@@ -23,6 +23,7 @@
 	</div> 
 	
 	<script type="text/javascript">
+	$(function(){
 		var id = '@op_id';
 		var el = $("#" + id);
 		
@@ -39,6 +40,9 @@
 			version    : "@operation.apiVersion"
 			
 		}); 
+		
+	});
+	
 	</script>
 	@params_list(op_id, operation, ver, apis)
 </li>
