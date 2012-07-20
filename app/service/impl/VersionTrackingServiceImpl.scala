@@ -31,7 +31,7 @@ class VersionTrackingServiceImpl extends VersionTrackingService with AbstractSer
       var listAPI = List[BaseKey]()
       apiResource.id = new BaseKey(apiResource.resourcePath, now)
       apiResource.apis.foreach(api => {
-        api.id = new BaseKey(apiResource.id + api.path, now)
+        api.id = new BaseKey(apiResource.id.path + api.path, now) // apiResource id.Path
         listAPI ::= api.id
         if (api.operations != None) {
           var listOperation = List[BaseKey]()
