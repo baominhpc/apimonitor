@@ -9,6 +9,8 @@ import models.APISpec
 import models.APIOperation
 import models.APIParameter
 import models.BaseKey
+import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.HashMap
 class APIResourceServiceImpl extends APIResourceService with AbstractService {
 
   def getAPIResources(start: Int, end: Int, path: String,currentVersion:String): List[APIResource] = {
@@ -36,10 +38,10 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
     return resources
   }
 
-  private def getAPIResource(apiResource: APIResource,keyword: String) = {
+  private def getAPIResource(apiResource: APIResource,keyword: String):APIResource = {
     var listSpec = List[APISpec]()
     if (apiResource == null || apiResource.specIds.isEmpty) {
-      null
+      return null
     }
     apiResource.specIds.foreach(specId => {
       val spec = apiSpecDAO.findById(specId)
@@ -60,7 +62,7 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
           })
           operation.parameters = listParameter
           listOpertation ::= operation
-        }
+        }        
       })
       spec.operations = listOpertation
       if(!spec.operations.isEmpty){
@@ -68,23 +70,31 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
       }
     })
     apiResource.apis = listSpec
-    apiResource
+    return apiResource
+  }
+  
+  private def getSpecFromOperationId(operationId:String,version:String):APISpec={
+    val specPath = operationId.split("__")(0)
+    var searchKey = new BaseKey
+    searchKey.path = specPath
+    searchKey.version = version
+    val spec = apiSpecDAO.findById(searchKey)
+    return spec
   }
 
   def getAPIResource(id: String,keyword: String, version:String): APIResource = {
     var lastestVersion = version
-    if(StringUtil.isBlank(lastestVersion)){
+    if (StringUtil.isBlank(lastestVersion)) {
       val listVersion = apiVersionTrackingDAO.findAndOrder(StringUtil.Order.DESC, 0, StringUtil.MAXINT)
       if (listVersion == null) {
         null
       }
       lastestVersion = listVersion(0).id
     }
-    val key  = new BaseKey(id,lastestVersion)
-    println("Base Key"  + key)
+    val key = new BaseKey(id, lastestVersion)
     val apiRes = apiResourceDAO.findById(key)
     if (apiRes != null) {
-      return getAPIResource(apiRes,keyword)
+      return getAPIResource(apiRes, keyword)
     } else {
       return null
     }
@@ -172,6 +182,51 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
       lastestVersion = listVersion(0).id
     }
     return apiOperationDAO.searchByKeyword(lastestVersion,keyword)
+  }
+  
+  def getAPIResourceByKeyword(keyword:String,version:String):List[APIResource] = {
+    if (StringUtil.isNotBlank(keyword)) {
+      val listResource = new ListBuffer[APIResource]()
+      val listResourceId = new ListBuffer[String]()
+      var mapSpec = new HashMap[String, APISpec]()
+      val operationList = apiOperationDAO.searchByKeyword(version, keyword)
+      if (operationList != null) {
+        var apis = List[APISpec]()
+        operationList.foreach(operation => {
+          val specId = operation.id.split("__")(0)
+          if (!mapSpec.isEmpty && mapSpec.keySet.contains(specId)) {
+            var spec = mapSpec.get(specId).get
+            spec.operations ::= operation
+          } else {
+            var spec = getSpecFromOperationId(operation.id, version)
+            if (spec != null) {
+              if (listResourceId.contains(spec.resPath)) {
+                for (i <- 0 to listResourceId.length -1) {
+                  if (listResourceId(i).equals(spec.resPath)) {
+                    listResource(i).apis ::= spec
+                  }
+                }
+              } else {
+                var searchKey = new BaseKey
+                searchKey.path = spec.resPath
+                searchKey.version = version
+                val resource = apiResourceDAO.findById(searchKey)
+                if (resource != null) {
+                  spec.operations ::= operation
+                  resource.apis ::= spec
+                  mapSpec.put(resource.resourcePath, spec)
+                  listResource += resource
+                  listResourceId += resource.id.path
+                }
+              }
+            }
+          }
+        })
+      }
+      return listResource.toList
+    }else{
+      return null
+    }
   }
 
 }

@@ -6,4 +6,5 @@ trait APIResourceService {
   def getAPIResources(start: Int, end: Int, path: String,currentVersion:String): List[APIResource]
   def getNameAPIResources(start: Int, end: Int, path: String,currentVersion:String): List[String]
   def searchOperation(version:String,keyword:String):List[APIOperation] 
+  def getAPIResourceByKeyword(keyword:String,version:String):List[APIResource]
 }

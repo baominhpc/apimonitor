@@ -33,16 +33,20 @@ object APIApplication extends AbstractController {
     if(StringUtil.isBlank(latestVersion)){
        latestVersion = versionTrackingService.getLastedVersion()
     }
-    val apis = versionTrackingService.getPathListOfVersion(latestVersion)
-    var list = List[APIResource]()
-    apis.foreach(api => {
-      val id = api;
-      val resource = apiResourceService.getAPIResource(id, keyword, version)
-      if (!resource.apis.isEmpty) {
-        list ::= resource
-      }
-    })
-    return list
+    if(StringUtil.isNotBlank(keyword)){
+      return apiResourceService.getAPIResourceByKeyword(keyword,latestVersion)
+    }else{
+      val apis = versionTrackingService.getPathListOfVersion(latestVersion)
+      var list = List[APIResource]()
+      apis.foreach(api => {
+        val id = api;
+        val resource = apiResourceService.getAPIResource(id, keyword, version)
+        if (!resource.apis.isEmpty) {
+          list ::= resource
+        }
+      })
+      return list
+    }
   }
     
 
