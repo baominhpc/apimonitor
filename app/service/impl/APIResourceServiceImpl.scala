@@ -193,6 +193,13 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
       if (operationList != null) {
         var apis = List[APISpec]()
         operationList.foreach(operation => {
+          var listParameter = List[APIParameter]()
+          operation.apiParameterIds.foreach(parameterId => {
+            val parameter = apiParameterDAO.findById(parameterId)
+            listParameter ::= parameter
+          })
+          operation.parameters = listParameter
+          
           val specId = operation.id.split("__")(0)
           if (!mapSpec.isEmpty && mapSpec.keySet.contains(specId)) {
             var spec = mapSpec.get(specId).get
