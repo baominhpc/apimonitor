@@ -1,8 +1,9 @@
 @(parentId : String, id: String, apiPath : String, operation : models.APIOperation, isAdd : Boolean, idTestcase : String ="", ver : String ="", apis : List[models.APIOperation] = List[models.APIOperation]())
 @defining(util.StringUtil.formatId(parentId + "_" + id + "_" + operation.nickname + "_" + operation.httpMethod + ver)) { op_id =>
 <li class="@operation.httpMethod.toLowerCase() operation @(operation.nickname)_@operation.httpMethod "
-	id="@op_id">
+	id="@(op_id)@(operation.apiConfigId)">
 	<div class='heading'>
+	
 		<h3>
 			<span class='http_method'> <a href="javascript:void(0)">@operation.httpMethod</a></span>
 			<span class='path'> <a href="javascript:void(0)">@apiPath</a></span>
@@ -22,7 +23,8 @@
 		<input type="hidden" name="operation_params"  value="@(op_id)|@(idTestcase)|@(apiPath)|@(operation.httpMethod.toLowerCase())|@(operation.apiVersion)"  />
 	</div> 
 	<script type="text/javascript">
-		var id = '@op_id';
+		var id = '@(op_id)@(operation.apiConfigId)';
+		
 		var el = $("#" + id);
 		
 		@if(idTestcase != ""){
@@ -43,6 +45,6 @@
 		
 	
 	</script>
-	@params_list(op_id, operation, ver, apis)
+	@params_list(op_id + operation.apiConfigId, operation, ver, apis)
 </li>
 }
