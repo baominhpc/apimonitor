@@ -85,15 +85,14 @@ Main.extend({
 		$("#resources_list").slideUp();
 		$("#content_message").slideDown();
 		
-		var url = "";
+		var urlCall = "";
 		if(keyword != ""){
-			url = '/getapi?url=' + encodeURIComponent(url) + "&version=" + version + "&keyword=" + keyword;
+			urlCall = '/getapi?url=' + encodeURIComponent(url) + "&version=" + version + "&keyword=" + keyword;
 		}else{
-			url = '/get_list_name_resource?url=' + encodeURIComponent(url) + "&version=" + version;
+			urlCall = '/get_list_name_resource?url=' + encodeURIComponent(url) + "&version=" + version;
 		}
 		var controller = this;
-		$('#resources_list').load(url,null, function() {
-			console.log("Test");
+		$('#resources_list').load(urlCall,null, function() {
 					$("#content_message").slideUp();
 					$("#resources_list").slideDown();
 					if (supportsLocalStorage()) {
