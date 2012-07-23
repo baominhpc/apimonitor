@@ -1,3 +1,36 @@
+$(function(){
+	$("#input_apiKey").change(function(){
+		save_token_again(this);
+	});
+	
+	$("#input_baseUrl").change(function(){
+		save_url_again(this);
+	});
+
+	
+	
+});
+
+	
+	function save_token_again(e){ 
+		var token = $(e).val().trim();
+		Main.token = token;
+		if (supportsLocalStorage()) {
+			localStorage.setItem("com.mobion.token", token);
+		}
+	}
+	
+	function save_url_again(e) {
+		var url = $(e).val().trim();
+		Main.base_url = url;
+		if(supportsLocalStorage()){
+			localStorage.setItem("com.mobion.url", url);
+		}
+	}
+	
+
+
+
 function postJson(url, data, success) {
 	$.ajax({
 		url : url,
@@ -45,12 +78,16 @@ var Main = Spine.Controller.sub({
 	},
 
 	elements : {
+		
 		"#api_tab" : "api_tab",
 		"#api_tab #resources_list" : "resources_list",
 	},
 
 	events : {
+		
 	},
+	
+
 
 	
 });
@@ -121,8 +158,10 @@ var Resource = Spine.Controller.sub({
 		
 		if($("#" + this.id + "_endpoint_list .endpoint").size() < 1){
 			var id = this.id;
+			$('.img_loading').css("display", "block");
 			$("#" + this.id + "_endpoint_list").load("/get_resource?rest=" + this.path + "&id=" + id, null, function(){
-				Docs.toggleEndpointListForResource(id)		
+				Docs.toggleEndpointListForResource(id);
+				$('.img_loading').css("display", "none");
 			});	
 		}else{
 			Docs.toggleEndpointListForResource(this.id)		
@@ -275,14 +314,13 @@ var Operation = Spine.Controller.sub({
 			var invocationUrl = this.invocationUrl(form.serializeArray(), this.http_method);
 			$(".request_url", this.target + "_content_sandbox_response")
 					.html("<pre>" + invocationUrl + "</pre>");
-	
-			if(this.version == "1.0"){
-				if(this.path.indexOf("{token}")!= -1){
-//					invocationUrl = invocationUrl.replace
-				}
-//				invocationUrl = invocationUrl.replace("/?", "?");
-			}
-			console.log("url=" + invocationUrl);
+//	
+//			if(this.version == "1.0"){
+//				if(this.path.indexOf("{token}")!= -1){
+////					invocationUrl = invocationUrl.replace
+//				}
+////				invocationUrl = invocationUrl.replace("/?", "?");
+//			}
 			if (this.http_method == "get") {
 				$.getJSON(invocationUrl, this.proxy(this.showResponse))
 						.complete(this.proxy(this.showCompleteStatus)).error(
@@ -394,9 +432,7 @@ var Operation = Spine.Controller.sub({
 		if(this.version == "1.0"){
 		
 			if(this.path.indexOf("{token}") != -1){
-				console.log(formValuesMap["token"]);
 				if(formValuesMap["token"] == null){
-					console.log("token = " + Main.token);
 					path = this.path.replace("{token}", Main.token);
 				}
 			}
@@ -426,7 +462,8 @@ var Operation = Spine.Controller.sub({
 			var value = formValuesMap[name];
 			var valArr = new Array();
 			valArr[0] = value;
-			if(this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html() == "String[]"){
+			var type = this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html(); 
+			if(type == "String[]" || type == "Array"){
 				valArr = value.split(",");
 			}
 			
@@ -464,11 +501,12 @@ var Operation = Spine.Controller.sub({
 			var valArr = new Array();
 			valArr[0] = value;
 			var dataType = this.params_table.find('input[name=' + name + "]").parents("tr").find(".type").html(); 
-			if(dataType == "String[]"){
+			if(dataType == "String[]" ||  dataType == "Array"){
 				valArr = value.split(",");
 				
 			}
-			if(version == "1.0" && dataType == "String[]"){
+			if(version == "1.0" && (dataType == "String[]" || dataType == "Array")){
+				postParam = postParam.length > 0 ? postParam : "{";
 				var listFormatParam = "\"" + name + "\":[";
 				for(var i in valArr){
 					

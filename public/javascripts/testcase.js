@@ -172,9 +172,10 @@ var TestCase = Spine.Controller.sub({
 	getDetails : function() {
 		if ($("#testcase_" + this.id + " .endpoints .endpoint").size() == 0) {
 			var controller = this;
-			console.log("/api_in_testcase/" + this.id);
+			$('.img_loading').css("display","block");
 			$.get("/api_in_testcase/" + this.id, null, function(res) {
 				controller.endpoints.empty();
+				$('.img_loading').css("display","none");
 				controller.endpoints.append(res);
 				controller.toggleEndpoints();
 

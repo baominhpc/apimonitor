@@ -969,3 +969,10 @@ body {
 }
 
 
+.img_loading{
+position:absolute;
+top: 200px;
+left : 500px;
+}
+
+
