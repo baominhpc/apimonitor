@@ -50,9 +50,11 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
     var list = new ListBuffer[APIOperation]();
     if(testCase.apiConfigs != null && !testCase.apiConfigs.isEmpty){
     	testCase.apiConfigs.foreach(apiConfig => {
-    	testCaseDAO.pushToField(testCase.id, "apiConfigIds", apiConfig.id)
-    	apiConfigDAO.save(apiConfig)
-    	  
+        val isExited = apiConfigDAO.findById(apiConfig.id)
+        if(isExited == null){
+          testCaseDAO.pushToField(testCase.id, "apiConfigIds", apiConfig.id)
+        }
+    	apiConfigDAO.save(apiConfig)	    
     	list += getAPIfromConfig(apiConfig)
     	})
     }
