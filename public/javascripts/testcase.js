@@ -54,20 +54,17 @@ var TestCaseMain = Spine.Controller.sub({
 		var formData = form2js(idform, '.', true);
 		var json = JSON.stringify(formData, null, '\t');
 		
-		var exp_params = "{";
+		var exp_params = new Object();
 		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
 			var name = $(this).find("input[name=name]").val();
 			var value = $(this).find("input[name=value]").val();
-			exp_params += "\"" + name + "\":\"" + value + "\",";
-			
+			exp_params[name]=value;
 		});
-		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
-			exp_params = exp_params.substr(0, exp_params.length -1);
-		}
-		exp_params +="}";
+
+		
 		var obj = new Object();
 		obj.index = countApiConfigs;
-		obj.exp_params = exp_params;
+		obj.exp_params = JSON.stringify(exp_params);
 		
 		obj.params =json;
 		obj.apiId = e.target.id.split("id_")[1];

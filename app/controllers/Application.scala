@@ -13,6 +13,10 @@ object Application extends AbstractController {
   
 
   
+  def login = Action{
+    Ok(views.html.login_index())
+  }
+  
   def index = Action {
 	  
     Ok(views.html.index("api"))

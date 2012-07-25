@@ -211,7 +211,7 @@ var Operation = Spine.Controller.sub({
 				.size();
 
 		var idform = $(e.target).parents(".endpoint").find(".content form").attr("id");
-		var json = "{";
+		var json = new Object();
 		$("#" + idform + " tbody tr").each(function(){
 			var name = $(this).find("input.input").attr("name");
 			var value = $(this).find("input.input").val();
@@ -220,29 +220,21 @@ var Operation = Spine.Controller.sub({
 			if(needed_name != ""){
 				value += "___" + needed_name + "___" + needed_api;
 			}
-			json += "\"" + name + "\":\"" + value + "\","  
+			json[name]= value;
 		});
-		if(json.length > 1){
-			json = json.substr(0, json.length-1);	
-		}
-		
-		json += "}";
-		var exp_params = "{";
+		var exp_params = new Object();
 		$(e.target).parents(".endpoint").find("div.expert_frm tbody tr").each(function(){
 			var name = $(this).find("input[name=name]").val();
 			var value = $(this).find("input[name=value]").val();
-			exp_params += "\"" + name + "\":\"" + value + "\",";
+			exp_params[name]= value;
 			
 		});
-		if($(e.target).parents(".endpoint").find("div.expert_frm tbody tr").size() >0){
-			exp_params = exp_params.substr(0, exp_params.length -1);
-		}
-		exp_params +="}";
+
 		var obj = new Object();
 		obj.index = countApiConfigs;
-		obj.exp_params = exp_params;
+		obj.exp_params = JSON.stringify(exp_params);
 		obj.apiConfigId = this.apiConfigId;
-		obj.params =json;
+		obj.params = JSON.stringify(json);
 		obj.apiId = e.target.id.split("id_")[1];
 		var id = $(e.target).parents('.resource').attr("id").split("testcase_")[1];
 
@@ -286,12 +278,21 @@ var Operation = Spine.Controller.sub({
 			
 			if(needed_name != null && needed_api != null && needed_name != "" && needed_api != ""){
 				$(this).find("input.input").val("");
-				needed_name = "\"" + needed_name + "\":";
-				var response = $(this).parents(".resource").find("." + needed_api + " .response_body").html();
-				if(response != null && response.indexOf( needed_name ) != -1){
-					var temp = response.substring(response.indexOf( needed_name ));
-					var value = temp.split(",")[0].substring(needed_name.length).replace(/\"/g,"");
-					$(this).find("input.input").val(value);
+				var response = $(this).parents(".resource")
+								.find("." + needed_api + " .response_body pre").html()
+								.replace(/<br>/g,"");
+				
+				var jsonData = JSON.parse(response);
+				var arrName = needed_name.split(".");
+				var jsonKey = jsonData;
+				for(var i in arrName){
+					jsonKey = jsonKey[arrName[i]];
+					if(jsonKey == null){
+						break;
+					}
+				}
+				if(jsonKey != null){
+					$(this).find("input.input").val(jsonKey);
 				}
 			}
 		});
@@ -314,13 +315,7 @@ var Operation = Spine.Controller.sub({
 			var invocationUrl = this.invocationUrl(form.serializeArray(), this.http_method);
 			$(".request_url", this.target + "_content_sandbox_response")
 					.html("<pre>" + invocationUrl + "</pre>");
-//	
-//			if(this.version == "1.0"){
-//				if(this.path.indexOf("{token}")!= -1){
-////					invocationUrl = invocationUrl.replace
-//				}
-////				invocationUrl = invocationUrl.replace("/?", "?");
-//			}
+
 			if (this.http_method == "get") {
 				$.getJSON(invocationUrl, this.proxy(this.showResponse))
 						.complete(this.proxy(this.showCompleteStatus)).error(
@@ -379,16 +374,27 @@ var Operation = Spine.Controller.sub({
 			if(value == "" && name == ""){
 				$(this).removeClass();
 			}else{
-				
-				var strSearch = value == "" ? "\"" + name + "\": "  : "\"" + name + "\":\"" + value + "\"";
-				if(response_body.indexOf(strSearch) == -1){
-					$(this).addClass("not_found");
-				}else{
-					$(this).removeClass();
+				var nameArr = name.split(".");
+				var jsonKey = jsonData;
+				var find = true;
+				for(var i in nameArr){
+					jsonKey = jsonKey[nameArr[i]]
+					if(jsonKey == null){
+						find = false;
+						break;
+					}
 				}
+				
+				if(value != ""){
+					find = value == jsonKey ? true : false;
+				}else{
+					find = typeof(jsonKey) != "undefined" ? true : false;
+				}
+				find == false ? $(this).addClass("not_found") : $(this).removeClass(); 
 			}
 	
 		});
+		
 		if (jsonData.status == "success") {
 			 $(this.target + " .options .run_status").html("Success").css("color", "blue");
 			$(".response_code", this.target + "_content_sandbox_response")
@@ -412,7 +418,6 @@ var Operation = Spine.Controller.sub({
 		
 		if(runner != null && runner.length > 0){
 			$(this.target).parents(".endpoint").next().find('input.submit').trigger("click");
-//			alert($(this.target).parents(".endpoint").next().html());
 			if($(this.target).parents(".endpoint").next().html()== null){
 				$(this.target).parents(".resource").find(".run").removeClass("run");
 			}
@@ -442,7 +447,6 @@ var Operation = Spine.Controller.sub({
 //		var urlTemplateText = this.path.split("{").join("").split("}").join("");
 		 
 		var urlTemplate = $.template(null, urlTemplateText);
-//		console.log(urlTemplate);
 		
 		var url = $.tmpl(urlTemplate, formValuesMap)[0].data;
 		var queryParams = "";
@@ -453,7 +457,6 @@ var Operation = Spine.Controller.sub({
 				queryParams = "?api_key=" + apiKey;
 		}
 
-		// var names = Object.keys(formValuesMap);
 		if(method=="post"){
 			url = Main.base_url + url + queryParams;
 			return url;
@@ -509,7 +512,6 @@ var Operation = Spine.Controller.sub({
 				postParam = postParam.length > 0 ? postParam : "{";
 				var listFormatParam = "\"" + name + "\":[";
 				for(var i in valArr){
-					
 					var paramValue = jQuery.trim(valArr[i]);
 					if(paramValue.length > 0){
 						listFormatParam += "\"" + paramValue + "\",";
@@ -519,7 +521,9 @@ var Operation = Spine.Controller.sub({
 				postParam += listFormatParam;
 			}else{
 				for(var i  in valArr){
+					
 					var paramValue = jQuery.trim(valArr[i]);
+					
 					if (paramValue.length > 0) {
 						postParam = postParam.length > 0 ? postParam : "{";
 						postParam += "\"" + name + "\"";
@@ -528,12 +532,7 @@ var Operation = Spine.Controller.sub({
 					}
 				}
 			}
-//			
-			
-		
-			
 		}
-
 
 		if (postParam.length > 0) {
 			postParam = postParam.substring(0, postParam.length - 1) + "}";
