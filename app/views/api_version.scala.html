@@ -1,5 +1,5 @@
 @(apiVer : models.VersionTracking)
-<li  style="margin-top : 10px;"id="@apiVer.id"><input class="ckbox"  type="checkbox" /><a href='javascript:void(0)' class="version">@apiVer.id</a><a style="margin-left : 12px;" href="javascript:void(0)" class="delVersion">Delete</a></li>
+<li  style="margin-top : 10px;"id="@apiVer.id"><input class="ckbox"  type="checkbox" /><a href='javascript:void(0)' class="version">@apiVer.id</a><a style="margin-left : 12px;" href="javascript:void(0)" class="delVersion"><img class="img_delete" src="@routes.Assets.at("images/Delete.png")" ></a></li>
 
 <script>
 new ApiVersion({

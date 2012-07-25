@@ -79,3 +79,27 @@ color : #86AB57 !important;
 .active_version a{
 color : white !important;
 }
+
+
+#build_version_bt, #compare{
+margin: 10px;
+color: #0F6AB4;
+background-color : #F5F5F5;
+   -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+  border-style: solid;
+    border-width: 1px;
+}
+
+
+#build_version_bt:hover, #compare:hover{
+background-color: #E6EFC2;
+    border: 1px solid #C6D880;
+    color: #0F6AB4;
+   font-weight :bold;
+   cursor : pointer;
+}
+
