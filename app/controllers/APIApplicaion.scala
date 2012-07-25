@@ -34,7 +34,8 @@ object APIApplication extends AbstractController {
        latestVersion = versionTrackingService.getLastedVersion()
     }
     if(StringUtil.isNotBlank(keyword)){
-      return apiResourceService.getAPIResourceByKeyword(keyword,latestVersion)
+      var result = apiResourceService.getAPIResourceByKeyword(keyword,latestVersion)              
+      return result
     }else{
       val apis = versionTrackingService.getPathListOfVersion(latestVersion)
       var list = List[APIResource]()

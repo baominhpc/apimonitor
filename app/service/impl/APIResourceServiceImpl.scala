@@ -210,6 +210,7 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
               if (listResourceId.contains(spec.resPath)) {
                 for (i <- 0 to listResourceId.length -1) {
                   if (listResourceId(i).equals(spec.resPath)) {
+                    spec.operations ::= operation
                     listResource(i).apis ::= spec
                   }
                 }
