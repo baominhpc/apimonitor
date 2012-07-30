@@ -1,4 +1,4 @@
-
+@(token : String)
 <div style="display:none;"class="img_loading" style="text-align: center;"><img style="width:190px;height:190px;" src="@routes.Assets.at("images/s.gif")" ></div>
 
 <div id="testcase_tab">
@@ -8,7 +8,6 @@
 		alt="#TB_inline?height=600&width=1240&inlineId=apiThickbox" />
 
 	<div id="apiThickbox" style="display: none">
-
 
 
 		<form id="add_api_2_testcase_form" style="display: none">
@@ -22,9 +21,9 @@
 		<div id="resources_list" style="display: none"></div>
 	</div>
 
-
 	<div style="margin-bottom: 120px;">
 		<form id='add_testcase_form'>
+			<input type="hidden" name="userId" value="@token"/>
 			<input id="name" name="name" type="text" />
 			 <input id="add_testcase_bt" type="button" value="Add New"/>
 		</form>
@@ -43,6 +42,7 @@
 	new TestCaseMain({
 		el : $('body')
 	});
+	
 </script>
 
 <script id="apiConfigs_template" type="text/x-jquery-tmpl">

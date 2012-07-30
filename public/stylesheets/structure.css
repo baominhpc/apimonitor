@@ -1,13 +1,13 @@
 /*
-  ✰✰✰✰✰✰✰✰✰✰✰✰✰✰ 
+  Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ° 
 
   Simple Login Form
   HTML5/CSS3 Coded by: $hekh@r d-Ziner, CSSJunction.com
   PSD by:PremiumPixels.com
   
-  Uuage: Free. You can modify, remove our links and use wherever you want ☺.
+  Uuage: Free. You can modify, remove our links and use wherever you want Ã¢ÂÂº.
   
-  ✰✰✰✰✰✰✰✰✰✰✰✰✰✰✰ 
+  Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ°Ã¢ÂÂ° 
   
 */
 body{
@@ -32,7 +32,7 @@ body{
 .box.login
 {
 	height:260px;
-    width:332px;
+    width:358px;
 	position:absolute;
 	left:50%;
 	top:50%;
@@ -160,4 +160,15 @@ footer#main{
 	text-align:center;
 	font:normal 11px/16px Arial, Helvetica, sans-serif;
 	width:100%;
+}
+
+span.inform {
+color : red;
+font-size : 14px;
+}
+
+
+#register {
+width : 400px;
+height : 338px;
 }

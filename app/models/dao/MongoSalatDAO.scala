@@ -44,11 +44,15 @@ class MongoSalatDAO[ObjectType >: Null <: AnyRef, ID <: AnyRef](collectionName: 
   def deleteById(id :ID){
     removeById(id, WriteConcern.Safe)
   }
+  
+  
+  
   def findLimit(start:Int,size:Int) : List[ObjectType] = {
     val c = find(MongoDBObject()).skip(start).limit(size)
     if (c == None) {
       return null
     }
+    println("===================c=" + c)
     return c.toList
   }
   

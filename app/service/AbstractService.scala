@@ -7,10 +7,12 @@ import models.dao.APISpecDAO
 import models.dao.TestCaseDAO
 import play.api.modules.spring.Spring
 import models.dao.VersionTrackingDAO
+import models.dao.UserDAO
 
 trait AbstractService {
   
 //	val apiDAO = Spring.getBeanOfType(classOf[APIDAO])
+	val userDAO = Spring.getBeanOfType(classOf[UserDAO])
 	val testCaseDAO = Spring.getBeanOfType(classOf[TestCaseDAO])
 	val apiConfigDAO = Spring.getBeanOfType(classOf[APIConfigDAO])
 	val apiParameterDAO = Spring.getBeanOfType(classOf[APIParameterDAO])

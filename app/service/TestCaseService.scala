@@ -22,6 +22,9 @@ trait TestCaseService {
 	
     def editFunctionInTestCase(testCase: TestCase)
 */	
+	  
+	def getTestCasesByUserId(userId : String) : List[TestCase] 
+	
 	def getListMobionTestCase(start: String, size: String):List[TestCase]
 
 }
