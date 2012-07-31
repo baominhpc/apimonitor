@@ -1,4 +1,4 @@
-@(tab : String = "api")
+@(tab : String = "api", token : String = "")
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -28,6 +28,7 @@
 <script src="@routes.Assets.at("javascripts/main.js")"></script>
 <script src="@routes.Assets.at("javascripts/testcase.js")"></script>
 <script src="@routes.Assets.at("javascripts/thickbox.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.cookie.js")"></script>
 
 
 
@@ -65,7 +66,7 @@
 	 @if(tab == "version"){
 		@version_index()
 	 }else{
-		@testcase_index()
+		@testcase_index(token)
 	 }
 	}
 	

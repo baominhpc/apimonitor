@@ -79,7 +79,8 @@ var TestCaseMain = Spine.Controller.sub({
 		// var url = $("#input_baseUrl").val().trim();
 		var url = "http://api.sgcharo.com/mobion";
 		this.testcase_list.empty();
-		this.testcase_list.load("/testcases", null, function() {
+		var userId = this.add_testcase_form.find("input[name=userId]").val();
+		this.testcase_list.load("/testcases?userId=" + userId, null, function() {
 
 		});
 	},

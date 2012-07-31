@@ -1,7 +1,6 @@
 package controllers
 
 import scala.reflect.BeanInfo
-
 import dispatch.json.Js
 import models.testcase.TestCase
 import models.APIResource
@@ -13,19 +12,32 @@ import sjson.json.Serializer.SJSON
 import util.APIRequestUtils
 import util.ConfigUtils
 import util.StringUtil
+import play.mvc.Http
+import play.api.mvc.Response
 
 object TestCaseApplication extends AbstractController {
 
-  def index = Action {
-	  
-    Ok(views.html.index("testcase"))
+  def index = Action {request => 
+    
+    
+    
+   
+    if(request.cookies.get("token") != None){
+      val token = request.cookies.get("token").get.value
+       Ok(views.html.index("testcase", token))
+    }else{
+    	Ok(views.html.login_index())  
+    }
+    
+    
     
   }
   
   
   //return list test case with id and name
-  def getTestcases(start: Int, size: Int) = Action {
-    var list = testCaseService.getTestCaseList(start, size);
+  def getTestcases(start: Int, size: Int, userId : String) = Action {
+    var list = testCaseService.getTestCasesByUserId(userId)
+     
     Ok(views.html.testcase_list(list))
   }
 
@@ -35,8 +47,10 @@ object TestCaseApplication extends AbstractController {
   }
 
   def addTestCase = Action(parse.json) { request =>
-
+    println("=====================")
+  println(request.body.toString())
     var testCase = SJSON.in[TestCase](Js(request.body.toString()))
+    println(testCase)
     testCase = testCaseService.addTestCase(testCase)
 
     Ok(views.html.testcase(testCase.id, testCase.name))

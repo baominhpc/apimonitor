@@ -1,5 +1,5 @@
 @(testcases : List[models.testcase.TestCase])
+
 <ul id="resources">
 	@for(tc <- testcases) { @testcase(tc.id, tc.name) }
-
 </ul>

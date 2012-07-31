@@ -7,13 +7,14 @@ import com.novus.salat.annotations._
 
 case class TestCase(
     @Key("_id") id:String,
+    userId : String = "",
     var name:String="", 
     @(JSONTypeHint @field)(value = classOf[String]) var apiConfigIds:List[String]=null, 
     @Ignore @(JSONTypeHint @field)(value = classOf[APIConfig]) var apiConfigs:List[APIConfig] = null) extends BaseBean(id){
 
   
   def this(){
-  	  this(StringUtil.generateStringTimeStamp(),"",null,null)
+  	  this(StringUtil.generateStringTimeStamp(),"","",null,null)
   }
 }
 

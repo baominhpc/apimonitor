@@ -154,5 +154,10 @@ class TestCaseServiceImpl extends TestCaseService with AbstractService {
     var list = testCaseDAO.findLimit(istart, isize)
     list
   }
+  
+  
+  def getTestCasesByUserId(userId : String) : List[TestCase] = {
+    return  testCaseDAO.findbyProperty("userId", userId);
+  }
 
 }

@@ -7,18 +7,75 @@ import models.ResList
 import play.api.mvc.Action
 import sjson.json.Serializer.SJSON
 import util.APIRequestUtils
+import models.User
+import play.mvc.Http.Response
+import play.api.mvc.Cookie
+import play.api.mvc.Cookie
+import play.api.mvc.Cookie
+import play.mvc.Http
+
+
+
 
 object Application extends AbstractController {
 
   
-
   
-  def login = Action{
-    Ok(views.html.login_index())
+  def login() = Action(parse.urlFormEncoded){ request =>
+
+    val password = request.body.get("password").head.head
+    val username = request.body.get("username").head.head
+    val user = userService.login(username, password)
+    if(user != null){
+      Redirect(routes.TestCaseApplication.index())
+      	.withCookies(new Cookie("token", user.userId))
+    }else{
+      
+    	Ok(views.html.login_index(false))  
+    }
+    
   }
   
-  def index = Action {
-	  
+  def logout = Action  {request =>
+    
+    Redirect(routes.Application.login()).discardingCookies("token")
+  }
+  
+  def register  = Action(parse.urlFormEncoded){ request =>
+    val password = request.body.get("password").head.head
+    val username = request.body.get("username").head.head
+    var user = new User()
+    user.setUsername(username)
+    user.setPassword(password)
+    val status = userService.createAccount(user)
+    if(status){
+	    Redirect(routes.TestCaseApplication.index()).withCookies(new Cookie("token", user.userId))  
+    }else{
+    	Ok(views.html.register_index(status))  
+    }
+    
+    
+  }
+  
+  
+  def login_page = Action{ request =>
+    if(request.cookies.get("token") != None){
+      Redirect(routes.TestCaseApplication.index())
+    }else{
+    	Ok(views.html.login_index())  
+    }
+    
+  }
+  
+  def register_page = Action{request =>
+      if(request.cookies.get("token") != None){
+      Redirect(routes.TestCaseApplication.index())
+    }else{
+    	Ok(views.html.register_index())  
+    }
+  }
+  
+  def index = Action { 
     Ok(views.html.index("api"))
     
   }

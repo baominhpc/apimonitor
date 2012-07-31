@@ -14,29 +14,34 @@
 
 <body>
 
-<form class="box login" method="post" action="/login">
+<form class="box login" id="register" method="post" action="/register">
 	<fieldset class="boxBody">
-	  <label>Username</label>
-	  <input type="text" tabindex="1" name="username" required>
-	  <label><a href="javascript:void(0)" class="rLink" tabindex="5">Forget your password?</a>Password</label>
-	  <input type="password" tabindex="2" required  name="password">
+	
+	   <label>Username</label>
+	    <input type="text" tabindex="1" name="username" required>
+	  <label>Password</label>
+	  <input type="password" tabindex="2" name="password" required>
+	  <label>Password Confirm</label>
+	  <input type="password" tabindex="3" name="pwdConfirm" required>
 	</fieldset>
 	<footer>
-<!-- 	  <label><input type="checkbox" tabindex="3">Keep me logged in</label> -->
-	  <span class="inform">@if(status == false){
-	  		Login fail! Check again your password or username.
-	  		}
+	  <label></label>
+	  <span class="inform">
+	  	@if(status == false){
+	  		Register fail ! User name exists !
+	  	}
 	  </span>
-	  <input type="submit" class="btnLogin" value="Login" tabindex="4">
+	  <input type="submit" class="btnLogin btnRegister" value="Register" tabindex="4">
 	</footer>
 </form>
 <footer id="main">
+
 </footer>
 
-<script>
-	new User({
-		el : $('body')
-	});
+<script type="text/javascript">
+ new User({
+	el : $("body") 
+ });
 </script>
 </body>
 </html>
