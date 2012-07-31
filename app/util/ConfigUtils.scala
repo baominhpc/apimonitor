@@ -9,5 +9,6 @@ object ConfigUtils {
   var CURRENT_VERSION = "20120703"
     
   val RAWDATA_DIR_PATH: String = Play.application.configuration.getString(ENV + ".rawdata.dir.path");
-  val DATA_DIR_PATH: String = Play.application.configuration.getString(ENV + ".data.dir.path");
+  
+  val HIVE_URL: String = Play.application.configuration.getString(ENV + ".hive.url");
 }

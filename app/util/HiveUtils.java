@@ -12,12 +12,14 @@ import java.sql.Statement;
 public class HiveUtils {
 
 	private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
+//	private static String hive_url = ConfigUtils.HIVE_URL();
+	private static String hive_url = "jdbc:hive://127.0.0.1:10000/default";
 
 	public static boolean buildData(String file, String time, String api) {
 		Connection con = null;
 		try {
 			Class.forName(driverName);
-			con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "", "");
+			con = DriverManager.getConnection(hive_url, "", "");
 			Statement stmt = con.createStatement();
 
 			String script = loadScript("loaddata.sql");

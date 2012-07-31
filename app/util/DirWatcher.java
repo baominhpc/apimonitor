@@ -13,8 +13,6 @@ public class DirWatcher{
 
 	int watchID;
 //	String rawDataPath = ConfigUtils.RAWDATA_DIR_PATH();
-//	String dataPath = ConfigUtils.DATA_DIR_PATH();
-	
 	String rawDataPath = "/mnt/apilogs/rawdata";
 	
 	public void start() throws IOException {
