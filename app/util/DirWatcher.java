@@ -65,11 +65,11 @@ public class DirWatcher{
 			if(file.isFile()){
 				System.out.println("Process file : " + rawDataPath);
 				
-				try {
+				/*try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					
-				}
+				}*/
 				String tmp[] = name.split("/");
 				if(tmp.length != 2){
 					return;
