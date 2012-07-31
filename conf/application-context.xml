@@ -25,4 +25,7 @@
     <bean id="apiResourceDAO" class="models.dao.APIResourceDAO"/>
     <bean id="apiSpecDAO" class="models.dao.APISpecDAO"/>
     <bean id="apiVersionTrackingDAO" class="models.dao.VersionTrackingDAO"/>
+    
+    <!-- Dir watch job -->
+    <bean id="dirWatcher" class="util.DirWatcher" init-method="start" destroy-method="stop"/>
 </beans>

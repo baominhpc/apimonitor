@@ -1,0 +1,2 @@
+%script% %infile% %outfile%
+

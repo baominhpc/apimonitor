@@ -59,4 +59,11 @@ object StringUtil{
     
     return ret
   }
+  
+  def readFile(file : String) : String = {
+    val source = scala.io.Source.fromFile("file.txt")
+    val lines = source .mkString
+	source.close ();
+    return lines;
+  }
 }
