@@ -22,16 +22,10 @@ public class HiveUtils {
 			con = DriverManager.getConnection(hive_url, "", "");
 			Statement stmt = con.createStatement();
 
-			String script = loadScript("loaddata.sql");
-			if(script.equals("")){
-				System.out.println("Load script failed!!!");
-				return false;
-			}
-			
+			String script = "LOAD DATA LOCAL INPATH %file% INTO TABLE apilog PARTITION(time='%time%', api='%api%')";
 			script = script.replaceAll("%file%", file);
 			script = script.replaceAll("%time%", time);
 			script = script.replaceAll("%api%", api);
-
 			
 			ResultSet res = stmt.executeQuery("set hive.exec.dynamic.partition=true");
 			
