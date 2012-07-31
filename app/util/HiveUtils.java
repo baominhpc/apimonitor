@@ -13,52 +13,23 @@ public class HiveUtils {
 
 	private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
 
-	public static boolean buildData(String time) {
+	public static boolean buildData(String file, String time, String api) {
 		Connection con = null;
 		try {
 			Class.forName(driverName);
 			con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "", "");
 			Statement stmt = con.createStatement();
 
-			String script = loadScript("builddata.sql");
-			script = script.replaceAll("%time_value%", time);
+			String script = loadScript("loaddata.sql");
+			script = script.replaceAll("%file%", file);
+			script = script.replaceAll("%time%", time);
+			script = script.replaceAll("%api%", api);
 
 			
 			ResultSet res = stmt.executeQuery("set hive.exec.dynamic.partition=true");
 			
 			stmt = con.createStatement();
 			res = stmt.executeQuery(script);
-			if (res.next()) {
-				System.out.println(res.getString(1));
-			}
-
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-
-		} finally {
-			if (con != null) {
-				try {
-					con.close();
-				} catch (SQLException e) {
-
-				}
-			}
-		}
-	}
-
-	public static boolean loadDataToTmp(String file) {
-		Connection con = null;
-		try {
-			Class.forName(driverName);
-			con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "", "");
-			Statement stmt = con.createStatement();
-
-			String script = loadScript("loaddata2tmp.sql");
-			script = script.replaceAll("%filename%", file);
-
-			ResultSet res = stmt.executeQuery(script);
 			if (res.next()) {
 				System.out.println(res.getString(1));
 			}
