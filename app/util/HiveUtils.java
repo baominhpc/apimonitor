@@ -24,7 +24,7 @@ public class HiveUtils {
 			stmt.executeQuery("set hive.exec.dynamic.partition=true");
 			stmt.close();
 			
-			String script = "LOAD DATA LOCAL INPATH '%file%' INTO TABLE apilog PARTITION(time='%time%', api='%api%')";
+			String script = "LOAD DATA LOCAL INPATH '%file%' INTO TABLE apilog_pro PARTITION(time='%time%', api='%api%')";
 			
 			for(LogInfo info : list){
 				stmt = con.createStatement();
