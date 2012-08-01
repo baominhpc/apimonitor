@@ -83,10 +83,6 @@ var Main = Spine.Controller.sub({
 		"#api_tab #resources_list" : "resources_list",
 	},
 
-	events : {
-		
-	},
-	
 
 
 	

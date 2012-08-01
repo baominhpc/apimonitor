@@ -26,7 +26,7 @@ object TestCaseApplication extends AbstractController {
       val token = request.cookies.get("token").get.value
        Ok(views.html.index("testcase", token))
     }else{
-    	Ok(views.html.login_index())  
+    	Redirect(routes.Application.login_page())  
     }
     
     

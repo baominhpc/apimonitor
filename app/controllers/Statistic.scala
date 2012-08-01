@@ -21,8 +21,8 @@ import views.html.statistic_index$
 object Statistic extends AbstractController {
 
   def index = Action{
-    apiReportService.getListAPIReport()
-    Ok(views.html.statistic_index())
+    val list = apiReportService.getListAPIReport()
+    Ok(views.html.statistic_index(list))
   }
   
   

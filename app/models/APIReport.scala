@@ -7,16 +7,17 @@ import com.novus.salat.annotations._
 
 @BeanInfo case class APIReport(
   @Key("_id") var id:BaseKey,
+  name : String,
   hit : String,
   totalTime : String,
   avg : String, 
   lastHit : String, 
   avgRate : String,
-  currentReate : String){
+  currentRate : String){
   
  
   def this() = {
-    this(null, "","", "", "", "", "")
+    this(null, "","","", "", "", "", "")
   }
 }
 

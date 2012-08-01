@@ -52,7 +52,7 @@
 		</div>
 	</form>
 	@if(tab !="api" && tab != "version"){
-		 <a href="javascript:void(0)" class="logout">Logout</a>
+		 <div style="text-align: right;margin-right:30px; "><a class="alogout" href="/logout" ><input class="logout" type="button" value="logout"/></a> </div>
 	 }
 	<div class="menu">
 		<ul>
@@ -68,8 +68,12 @@
 	 @if(tab == "version"){
 		@version_index()
 	 }else{
+	 	@if(tab == "statistic"){
+	 	}else{
+	 		@testcase_index(token)
+	 	}
 
-		@testcase_index(token)
+		
 	 }
 	}
 	

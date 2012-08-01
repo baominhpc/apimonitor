@@ -1,3 +1,4 @@
+@(apiReportList : List[models.APIReport])
 <html>
 <head>
 
@@ -22,26 +23,17 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            
-        </tr>
-        <tr>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            <td>Row 1 Data 2</td>
-            <td>Row 1 Data 1</td>
-            
-        </tr>
+    @for(r <- apiReportList){
+    	<tr>
+    		<td>@r.name</td>
+    		<td>@r.hit</td>
+    		<td>@r.totalTime</td>
+    		<td>@r.avg</td>
+    		<td>@r.lastHit</td>
+    		<td>@r.avgRate</td>
+    		<td>@r.currentRate</td>
+    	</tr>
+    }
     </tbody>
 </table>
 </body>

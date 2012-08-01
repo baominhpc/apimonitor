@@ -13,4 +13,5 @@ class APIReportServiceImpl extends  APIReportService with AbstractService {
   def getListAPIReport(): List[APIReport]={
     return apiReportDAO.findAll()
   }
+
 }
