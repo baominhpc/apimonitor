@@ -10,6 +10,7 @@
 
 
     <!-- A simple bean, with a simple name -->
+    
     <bean id="apiReportService" class="service.impl.APIReportServiceImpl" />
     <bean id="userService" class="service.impl.UserServiceImpl" />
     <bean id="myService" class="service.impl.MyServiceImpl"/>
@@ -21,7 +22,7 @@
     
     
     <bean id="userDAO" class="models.dao.UserDAO" />
-    <bean id="apiReportDAO" class="models.dao.UserDAO"/>
+    <bean id="apiReportDAO" class="models.dao.APIReportDAO"/>
     <bean id="testCaseDAO" class="models.dao.TestCaseDAO"/>
     <bean id="apiConfigDAO" class="models.dao.APIConfigDAO"/>
     <bean id="apiParameterDAO" class="models.dao.APIParameterDAO"/>
