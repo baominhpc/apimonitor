@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HiveUtils {
@@ -13,7 +15,7 @@ public class HiveUtils {
 	
 	private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
 //	private static String hive_url = ConfigUtils.HIVE_URL();
-	private static String hive_url = "jdbc:hive://127.0.0.1:10000/default";
+	private static String hive_url = "jdbc:hive://192.168.30.168:10000/default";
 
 	public static boolean buildData(List<LogInfo> list) {
 		Connection con = null;
@@ -21,20 +23,18 @@ public class HiveUtils {
 			Class.forName(driverName);
 			con = DriverManager.getConnection(hive_url, "", "");
 			Statement stmt = con.createStatement();
-			ResultSet res = stmt.executeQuery("set hive.exec.dynamic.partition=true");
+			stmt.executeQuery("set hive.exec.dynamic.partition=true");
+			stmt.close();
 			
-			String script = "LOAD DATA LOCAL INPATH '%file%' INTO TABLE apilog PARTITION(time='%time%', api='%api%')";
+			String script = "LOAD DATA LOCAL INPATH '%file%' INTO TABLE apilog_pro PARTITION(time='%time%', api='%api%')";
 			
 			for(LogInfo info : list){
 				stmt = con.createStatement();
 				String tmp = script.replaceAll("%file%", info.getFile());
 				tmp = tmp.replaceAll("%time%", info.getTime());
 				tmp = tmp.replaceAll("%api%", info.getApi());
-				
-				res = stmt.executeQuery(tmp);
-				if (res.next()) {
-					System.out.println(res.getString(1));
-				}
+				stmt.executeQuery(tmp);
+				stmt.close();
 			}
 			
 			return true;
@@ -50,6 +50,120 @@ public class HiveUtils {
 
 				}
 			}
+		}
+	}
+	
+	public static boolean buildapiReport(String time) {
+		Connection con = null;
+		try {
+			Class.forName(driverName);
+			con = DriverManager.getConnection(hive_url, "", "");
+			Statement stmt = con.createStatement();
+			
+			String sql = "from apilog_pro insert into table api_report PARTITION(time='%time%')select api, count(*), max(elapsetime), min(elapsetime),avg(elapsetime) where time='%time%' group by api";
+			sql = sql.replaceAll("%time%", time);
+			
+			stmt = con.createStatement();
+			stmt.executeQuery(sql);
+			
+			
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+
+				}
+			}
+		}
+	}
+	
+	public static List<APIReport> getapiReport(String time) {
+		List<APIReport> list = new ArrayList<HiveUtils.APIReport>();
+		Connection con = null;
+		try {
+			Class.forName(driverName);
+			con = DriverManager.getConnection(hive_url, "", "");
+			Statement stmt = con.createStatement();
+			
+			String sql = "select * from api_report where time = '" + time + "'";
+			stmt = con.createStatement();
+			ResultSet ret = stmt.executeQuery(sql);
+			while(ret.next()){
+				String api = ret.getString(1);
+				int count = ret.getInt(2);
+				int max = ret.getInt(3);
+				int min = ret.getInt(4);
+				int avg = ret.getInt(5);
+				list.add(new APIReport(api, count, max, min, avg));
+			}
+			
+			
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Collections.emptyList();
+
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+
+				}
+			}
+		}
+	}
+	
+	static class APIReport{
+		String api;
+		int count;
+		int max;
+		int min;
+		int avg;
+		
+		public APIReport(String api, int count, int max, int min, int avg) {
+			this.api = api;
+			this.count = count;
+			this.max = max;
+			this.min = min;
+			this.avg = avg;
+		}
+		public String getApi() {
+			return api;
+		}
+		public void setApi(String api) {
+			this.api = api;
+		}
+		public int getCount() {
+			return count;
+		}
+		public void setCount(int count) {
+			this.count = count;
+		}
+		public int getMax() {
+			return max;
+		}
+		public void setMax(int max) {
+			this.max = max;
+		}
+		public int getMin() {
+			return min;
+		}
+		public void setMin(int min) {
+			this.min = min;
+		}
+		public int getAvg() {
+			return avg;
+		}
+		public void setAvg(int avg) {
+			this.avg = avg;
 		}
 	}
 	
@@ -83,6 +197,10 @@ public class HiveUtils {
 			this.api = api;
 		}
 		
+	}
+	
+	public static void main(String[] args) {
+		buildapiReport("20120729");
 	}
 
 }
