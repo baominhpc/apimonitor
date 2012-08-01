@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.contentobjects.jnotify.JNotify;
 import net.contentobjects.jnotify.JNotifyException;
@@ -19,8 +20,10 @@ public class DirWatcher{
 //	String rawDataPath = ConfigUtils.RAWDATA_DIR_PATH();
 	String rawDataPath = "/mnt/apilogs/rawdata";
 	
-	private static final int SIZE = 100;
+	private static final int SIZE = 10;
+	private static final int TIMES_TO_SLEEP = 200;
 	
+	private AtomicInteger count = new AtomicInteger(0);
 	private List<LogInfo> list;
 	
 	public void start() throws IOException {
@@ -94,7 +97,19 @@ public class DirWatcher{
 						System.out.println("LOAD DATA TO APILOG FAILED!!!");
 					}
 					list = new ArrayList<LogInfo>();
+					count.incrementAndGet();
 				}
+				
+				//after run 300 file -> sleep 5 second
+				if(count.get() > TIMES_TO_SLEEP ){
+					try {
+						Thread.sleep(1000 * 5);
+					} catch (InterruptedException e) {
+						
+					}
+					count = new AtomicInteger(0);
+				}
+				
 			}else{
 				System.out.println("Only process file");
 			}
