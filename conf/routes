@@ -51,7 +51,7 @@ POST	/delete_version/:version           controllers.APIApplication.deleteVersion
 
 #Statistic Controller
 
-GET  	/statistic								controllers.Statistic.index()
+GET  	/statistic								controllers.Statistic.index(date : String?="")
 GET		/chart									controllers.Statistic.chart()
 
 
