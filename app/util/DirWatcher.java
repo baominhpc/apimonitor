@@ -2,18 +2,26 @@ package util;
 
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.io.FilenameUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.contentobjects.jnotify.JNotify;
 import net.contentobjects.jnotify.JNotifyException;
 import net.contentobjects.jnotify.JNotifyListener;
+
+import org.apache.commons.io.FilenameUtils;
+
+import util.HiveUtils.LogInfo;
 
 public class DirWatcher{
 
 	int watchID;
 //	String rawDataPath = ConfigUtils.RAWDATA_DIR_PATH();
 	String rawDataPath = "/mnt/apilogs/rawdata";
+	
+	private static final int SIZE = 10;
+	
+	private List<LogInfo> list;
 	
 	public void start() throws IOException {
 		
@@ -65,11 +73,6 @@ public class DirWatcher{
 			if(file.isFile()){
 				System.out.println("Process file : " + rawDataPath);
 				
-				/*try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					
-				}*/
 				String tmp[] = name.split("/");
 				if(tmp.length != 2){
 					return;
@@ -78,8 +81,19 @@ public class DirWatcher{
 				String time = tmp[0];
 				String api = FilenameUtils.removeExtension(tmp[1]);
 				
-				if(HiveUtils.buildData(file.getPath(), time, api)){
-					System.out.println("LOAD DATA TO APILOG SUCCESS!!!");
+				if(list == null){
+					list = new ArrayList<LogInfo>();
+				}
+
+				list.add(new LogInfo(file.getPath(), time, api));
+				
+				if(list.size() >= SIZE ){
+					if(HiveUtils.buildData(list)){
+						System.out.println("LOAD DATA TO APILOG SUCCESS, size: " + SIZE);
+					}else{
+						System.out.println("LOAD DATA TO APILOG FAILED!!!");
+					}
+					list = new ArrayList<LogInfo>();
 				}
 			}else{
 				System.out.println("Only process file");
