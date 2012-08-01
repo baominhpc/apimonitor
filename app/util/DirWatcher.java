@@ -19,7 +19,7 @@ public class DirWatcher{
 //	String rawDataPath = ConfigUtils.RAWDATA_DIR_PATH();
 	String rawDataPath = "/mnt/apilogs/rawdata";
 	
-	private static final int SIZE = 10;
+	private static final int SIZE = 100;
 	
 	private List<LogInfo> list;
 	
