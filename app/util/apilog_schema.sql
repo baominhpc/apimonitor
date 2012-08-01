@@ -28,4 +28,4 @@ avg int
 PARTITIONED BY(time string)
 
 
-from apilog_pro insert into table api_report select api, count(*), max(elapsetime), min(elapsetime),avg(elapsetime) where time='20120730' group by api;
+from apilog_pro insert into table api_report PARTITION(time='20120725')select api, count(*), max(elapsetime), min(elapsetime),avg(elapsetime) where time='20120725' group by api;

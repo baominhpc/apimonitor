@@ -21,7 +21,7 @@ public class DirWatcher{
 	String rawDataPath = "/mnt/apilogs/rawdata";
 	
 	private static final int SIZE = 5; //batch
-	private static final int TIMES_TO_SLEEP = 30; // number of batch
+	private static final int TIMES_TO_SLEEP = 3000; // number of batch
 	private static final long SLEEP_TIME = 1;
 	
 	private AtomicInteger count = new AtomicInteger(0);
