@@ -21,7 +21,7 @@ public class DirWatcher{
 	String rawDataPath = "/mnt/apilogs/rawdata";
 	
 	private static final int SIZE = 50; //batch
-	private static final int TIMES_TO_SLEEP = 6; // number of batch
+	private static final int TIMES_TO_SLEEP = 5; // number of batch
 	private static final long SLEEP_TIME = 20 * 60 * 1000; // 20'
 	
 	private AtomicInteger count = new AtomicInteger(0);
@@ -98,14 +98,14 @@ public class DirWatcher{
 						System.out.println("LOAD DATA TO APILOG FAILED!!!");
 					}
 					list = new ArrayList<LogInfo>();
-					count.incrementAndGet();
+					System.out.println( "======" + count.incrementAndGet());
 				}
 				
 				//after run 300 file -> sleep 5 second
-				if(count.get() > SLEEP_TIME ){
+				if(count.get() > TIMES_TO_SLEEP ){
 					System.out.println("==TIME TO SLEEP==");
 					try {
-						Thread.sleep(1000 * 60);
+						Thread.sleep(SLEEP_TIME);
 					} catch (InterruptedException e) {
 						
 					}

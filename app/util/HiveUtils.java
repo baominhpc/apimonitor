@@ -21,7 +21,8 @@ public class HiveUtils {
 			Class.forName(driverName);
 			con = DriverManager.getConnection(hive_url, "", "");
 			Statement stmt = con.createStatement();
-			ResultSet res = stmt.executeQuery("set hive.exec.dynamic.partition=true");
+			stmt.executeQuery("set hive.exec.dynamic.partition=true");
+			stmt.close();
 			
 			String script = "LOAD DATA LOCAL INPATH '%file%' INTO TABLE apilog PARTITION(time='%time%', api='%api%')";
 			
@@ -30,11 +31,8 @@ public class HiveUtils {
 				String tmp = script.replaceAll("%file%", info.getFile());
 				tmp = tmp.replaceAll("%time%", info.getTime());
 				tmp = tmp.replaceAll("%api%", info.getApi());
-				
-				res = stmt.executeQuery(tmp);
-				if (res.next()) {
-					System.out.println(res.getString(1));
-				}
+				stmt.executeQuery(tmp);
+				stmt.close();
 			}
 			
 			return true;
