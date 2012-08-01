@@ -1,6 +1,7 @@
 package controllers
 
 import dispatch.json.Js
+import util.HiveUtils
 import models.APIResource
 import models.Res
 import models.ResList
@@ -14,6 +15,7 @@ import play.api.mvc.Cookie
 import play.api.mvc.Cookie
 import play.mvc.Http
 import views.html.statistic_index$
+import java.util.Calendar
 
 
 
@@ -21,7 +23,9 @@ import views.html.statistic_index$
 object Statistic extends AbstractController {
 
   def index = Action{
-    val list = apiReportService.getListAPIReport()
+    val time = Calendar.getInstance().getTime().toString()
+    val list = HiveUtils.getapiReport("20120725")
+    println("SIZE============="+list.size())
     Ok(views.html.statistic_index(list))
   }
   

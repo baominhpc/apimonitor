@@ -1,4 +1,4 @@
-@(apiReportList : List[models.APIReport])
+@(apiReportList : java.util.List[util.APIReport])
 <html>
 <head>
 
@@ -15,23 +15,21 @@
         <tr>
             <th>API</th>
             <th>Hit</th>
-            <th>Total Time</th>
+            <th>Max</th>
+            <th>Min</th>
             <th>Avg(ms/hit)</th>
-            <th>Last Hit</th>
-            <th>Avg Rate(hit/s)</th>
-            <th>Current Rate(hit/s)</th>
+            
+    
         </tr>
     </thead>
     <tbody>
     @for(r <- apiReportList){
     	<tr>
-    		<td>@r.name</td>
-    		<td>@r.hit</td>
-    		<td>@r.totalTime</td>
-    		<td>@r.avg</td>
-    		<td>@r.lastHit</td>
-    		<td>@r.avgRate</td>
-    		<td>@r.currentRate</td>
+    		<td>@r.getApi()</td>
+    		<td>@r.getCount()</td>
+    		<td>@r.getMax()</td>
+    		<td>@r.getMin()</td>
+    		<td>@r.getAvg()</td>
     	</tr>
     }
     </tbody>
@@ -41,6 +39,6 @@
 <script>
 $(function(){
 	
-	$("#tab").dataTable();
+	$("#tab").dataTable({"iDisplayLength" : "50"});
 });
 </script>

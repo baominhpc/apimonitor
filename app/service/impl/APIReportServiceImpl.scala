@@ -11,7 +11,7 @@ import models.APIReport
 class APIReportServiceImpl extends  APIReportService with AbstractService {
   
   def getListAPIReport(): List[APIReport]={
-    return apiReportDAO.findAll()
+    return null;
   }
 
 }

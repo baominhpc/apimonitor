@@ -41,7 +41,7 @@ public class DirWatcher{
 			JNotify.addWatch(rawDataPath, mask, watchSubtree, new Listener());
 
 			System.out.println("----------STARTED WATCHING DIR : " + rawDataPath + " ----------");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			System.out.println("----------CONNOT START WATCHING DIR : " + rawDataPath + " ----------");
 			
 		}

@@ -10,14 +10,16 @@ import com.novus.salat.annotations._
   name : String,
   hit : String,
   totalTime : String,
-  avg : String, 
+  avg : String,
+  min : String,
+  max : String,
   lastHit : String, 
   avgRate : String,
   currentRate : String){
   
  
   def this() = {
-    this(null, "","","", "", "", "", "")
+    this(null, "","","","","", "", "", "", "")
   }
 }
 
