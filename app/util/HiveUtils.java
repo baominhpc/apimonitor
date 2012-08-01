@@ -1,39 +1,42 @@
 package util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class HiveUtils {
 
+	
+	
 	private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
+//	private static String hive_url = ConfigUtils.HIVE_URL();
+	private static String hive_url = "jdbc:hive://127.0.0.1:10000/default";
 
-	public static boolean buildData(String file, String time, String api) {
+	public static boolean buildData(List<LogInfo> list) {
 		Connection con = null;
 		try {
 			Class.forName(driverName);
-			con = DriverManager.getConnection("jdbc:hive://localhost:10000/default", "", "");
+			con = DriverManager.getConnection(hive_url, "", "");
 			Statement stmt = con.createStatement();
-
-			String script = loadScript("loaddata.sql");
-			script = script.replaceAll("%file%", file);
-			script = script.replaceAll("%time%", time);
-			script = script.replaceAll("%api%", api);
-
-			
 			ResultSet res = stmt.executeQuery("set hive.exec.dynamic.partition=true");
 			
-			stmt = con.createStatement();
-			res = stmt.executeQuery(script);
-			if (res.next()) {
-				System.out.println(res.getString(1));
+			String script = "LOAD DATA LOCAL INPATH '%file%' INTO TABLE apilog PARTITION(time='%time%', api='%api%')";
+			
+			for(LogInfo info : list){
+				stmt = con.createStatement();
+				String tmp = script.replaceAll("%file%", info.getFile());
+				tmp = tmp.replaceAll("%time%", info.getTime());
+				tmp = tmp.replaceAll("%api%", info.getApi());
+				
+				res = stmt.executeQuery(tmp);
+				if (res.next()) {
+					System.out.println(res.getString(1));
+				}
 			}
-
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,27 +52,37 @@ public class HiveUtils {
 			}
 		}
 	}
-
-	private static String loadScript(String fileName) throws IOException {
-		String s = "";
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new InputStreamReader(DirWatcher.class.getResourceAsStream(fileName)));
-
-			String tmp;
-			while ((tmp = in.readLine()) != null) {
-				s += tmp + "\n";
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null) {
-				in.close();
-			}
-
+	
+	static class LogInfo{
+		String file;
+		String time;
+		String api;
+		
+		public LogInfo(String file, String time, String api) {
+			this.file = file;
+			this.time = time;
+			this.api = api;
 		}
-
-		return s;
+		
+		public String getFile() {
+			return file;
+		}
+		public void setFile(String file) {
+			this.file = file;
+		}
+		public String getTime() {
+			return time;
+		}
+		public void setTime(String time) {
+			this.time = time;
+		}
+		public String getApi() {
+			return api;
+		}
+		public void setApi(String api) {
+			this.api = api;
+		}
+		
 	}
 
 }
