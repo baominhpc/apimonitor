@@ -10,6 +10,7 @@
 
 
     <!-- A simple bean, with a simple name -->
+    <bean id="apiReportService" class="service.impl.APIReportServiceImpl" />
     <bean id="userService" class="service.impl.UserServiceImpl" />
     <bean id="myService" class="service.impl.MyServiceImpl"/>
     <bean id="testCaseService" class="service.impl.TestCaseServiceImpl"/>
@@ -20,6 +21,7 @@
     
     
     <bean id="userDAO" class="models.dao.UserDAO" />
+    <bean id="apiReportDAO" class="models.dao.UserDAO"/>
     <bean id="testCaseDAO" class="models.dao.TestCaseDAO"/>
     <bean id="apiConfigDAO" class="models.dao.APIConfigDAO"/>
     <bean id="apiParameterDAO" class="models.dao.APIParameterDAO"/>
@@ -29,5 +31,5 @@
     <bean id="apiVersionTrackingDAO" class="models.dao.VersionTrackingDAO"/>
     
     <!-- Dir watch job -->
-    <bean id="dirWatcher" class="util.DirWatcher" init-method="start" destroy-method="stop"/>
+    <!--<bean id="dirWatcher" class="util.DirWatcher" init-method="start" destroy-method="stop"/>-->
 </beans>

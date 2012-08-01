@@ -1,0 +1,54 @@
+<html>
+<head>
+
+<script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.dataTables.min.js")"></script>
+<link  
+	href="@routes.Assets.at("stylesheets/demo_table.css")"
+	rel="stylesheet" media="screen"/>
+	
+</head>
+<body>
+<table id="tab" class="display">
+    <thead>
+        <tr>
+            <th>API</th>
+            <th>Hit</th>
+            <th>Total Time</th>
+            <th>Avg(ms/hit)</th>
+            <th>Last Hit</th>
+            <th>Avg Rate(hit/s)</th>
+            <th>Current Rate(hit/s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            
+        </tr>
+        <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+            <td>Row 1 Data 1</td>
+            
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
+<script>
+$(function(){
+	
+	$("#tab").dataTable();
+});
+</script>

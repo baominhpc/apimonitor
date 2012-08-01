@@ -19,7 +19,6 @@ class APIResourceServiceImpl extends APIResourceService with AbstractService {
     var lastestVersion =  currentVersion
     if(StringUtil.isBlank(currentVersion)){
       val listVersion = apiVersionTrackingDAO.findAndOrder(StringUtil.Order.DESC, 0, StringUtil.MAXINT)
-      print(listVersion)
       if (listVersion == null) {
         resources
       }

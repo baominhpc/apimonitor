@@ -14,8 +14,10 @@ import service.APIResourceService
 import service.VersionTrackingService
 import util.ConfigUtils
 import service.UserService
+import service.APIReportService
 
 class AbstractController extends Controller {
+  val apiReportService = Spring.getBeanOfType(classOf[APIReportService])
   val userService = Spring.getBeanOfType(classOf[UserService])
   val myService = Spring.getBeanOfType(classOf[MyService])
   val testCaseService = Spring.getBeanOfType(classOf[TestCaseService])

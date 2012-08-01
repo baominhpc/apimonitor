@@ -35,7 +35,7 @@ POST	/remove_api_from_testcase               controllers.TestCaseApplication.rem
 
 #API Controller
 GET    /compare								  controllers.APIApplication.compare(ver1: String, ver2 : String)
-GET    /version						      controllers.APIApplication.version_index
+GET    /version						          controllers.APIApplication.version_index
 GET    /compare_version							  controllers.APIApplication.version_compare(ver1: String, ver2 : String)
 GET    /getapi                                controllers.APIApplication.getapi(keyword: String ?= "", version: String ?= "")
 GET    /build_database_for_testcase			  controllers.TestCaseApplication.buildAPIDatabase
@@ -47,6 +47,14 @@ GET    /search_api                             controllers.APIApplication.search
 
 
 POST	/delete_version/:version           controllers.APIApplication.deleteVersion(version:String)
+
+
+#Statistic Controller
+
+GET  	/statistic								controllers.Statistic.index()
+GET		/chart									controllers.Statistic.chart()
+
+
 
 
 # Map static resources from the /public folder to the /assets URL path

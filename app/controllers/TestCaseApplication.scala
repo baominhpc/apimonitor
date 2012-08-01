@@ -47,8 +47,6 @@ object TestCaseApplication extends AbstractController {
   }
 
   def addTestCase = Action(parse.json) { request =>
-    println("=====================")
-  println(request.body.toString())
     var testCase = SJSON.in[TestCase](Js(request.body.toString()))
     println(testCase)
     testCase = testCaseService.addTestCase(testCase)

@@ -25,6 +25,7 @@ class UserServiceImpl extends UserService with AbstractService {
   }
   
   def login(username : String, pwd : String): User = {
+    
     val res = userDAO.findbyProperty("username", username)
     res.foreach(item => {
       if(pwd.equals(item.password)){
