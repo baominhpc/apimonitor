@@ -20,8 +20,9 @@ public class DirWatcher{
 //	String rawDataPath = ConfigUtils.RAWDATA_DIR_PATH();
 	String rawDataPath = "/mnt/apilogs/rawdata";
 	
-	private static final int SIZE = 10;
+	private static final int SIZE = 5;
 	private static final int TIMES_TO_SLEEP = 20;
+	private static final long SLEEP_TIME = 20 * 60 * 1000; // 20'
 	
 	private AtomicInteger count = new AtomicInteger(0);
 	private List<LogInfo> list;
@@ -101,10 +102,10 @@ public class DirWatcher{
 				}
 				
 				//after run 300 file -> sleep 5 second
-				if(count.get() > TIMES_TO_SLEEP ){
+				if(count.get() > SLEEP_TIME ){
 					System.out.println("==TIME TO SLEEP==");
 					try {
-						Thread.sleep(1000 * 5);
+						Thread.sleep(1000 * 60);
 					} catch (InterruptedException e) {
 						
 					}
@@ -125,3 +126,4 @@ public class DirWatcher{
 	}
 
 }
+
