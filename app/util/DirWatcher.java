@@ -29,17 +29,22 @@ public class DirWatcher{
 	
 	public void start() throws IOException {
 		
-		if(rawDataPath.endsWith("/")){
-			rawDataPath = rawDataPath.substring(0, rawDataPath.length() - 1);
+		try {
+			if (rawDataPath.endsWith("/")) {
+				rawDataPath = rawDataPath.substring(0, rawDataPath.length() - 1);
+			}
+
+			int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
+
+			boolean watchSubtree = true;
+
+			JNotify.addWatch(rawDataPath, mask, watchSubtree, new Listener());
+
+			System.out.println("----------STARTED WATCHING DIR : " + rawDataPath + " ----------");
+		} catch (Exception e) {
+			System.out.println("----------CONNOT START WATCHING DIR : " + rawDataPath + " ----------");
+			
 		}
-		
-		int mask = JNotify.FILE_CREATED | JNotify.FILE_DELETED | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED;
-
-		boolean watchSubtree = true;
-
-		JNotify.addWatch(rawDataPath, mask, watchSubtree, new Listener());
-
-		System.out.println("----------STARTED WATCHING DIR : " + rawDataPath + " ----------");
 
 		
 	}
