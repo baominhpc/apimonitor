@@ -242,7 +242,7 @@ var Operation = Spine.Controller.sub({
 
 		var formData = form2js("update_api_2_testcase_form", '.', true);
 		var json2 = JSON.stringify(formData, null, '\t');
-		alert(json2);
+		
 		postJson("/add_api_to_testcase", json2, function(res) {
 			$("#testcase_list #resources #testcase_" + id + "_endpoint_list")
 					.html(res.responseText);
@@ -274,22 +274,27 @@ var Operation = Spine.Controller.sub({
 			
 			if(needed_name != null && needed_api != null && needed_name != "" && needed_api != ""){
 				$(this).find("input.input").val("");
-				var response = $(this).parents(".resource")
-								.find("." + needed_api + " .response_body pre").html()
-								.replace(/<br>/g,"");
-				
-				var jsonData = JSON.parse(response);
-				var arrName = needed_name.split(".");
-				var jsonKey = jsonData;
-				for(var i in arrName){
-					jsonKey = jsonKey[arrName[i]];
-					if(jsonKey == null){
-						break;
+				if($(this).parents(".resource").find("." + needed_api + "  .responde_body").html() != null){
+					var response = $(this).parents(".resource")
+					.find("." + needed_api + " .response_body pre").html()
+					.replace(/<br>/g,"");
+					
+					var jsonData = JSON.parse(response);
+					var arrName = needed_name.split(".");
+					var jsonKey = jsonData;
+					for(var i in arrName){
+						jsonKey = jsonKey[arrName[i]];
+						if(jsonKey == null){
+							break;
+						}
+					}
+					if(jsonKey != null){
+						$(this).find("input.input").val(jsonKey);
 					}
 				}
-				if(jsonKey != null){
-					$(this).find("input.input").val(jsonKey);
-				}
+			
+				
+				
 			}
 		});
 		
