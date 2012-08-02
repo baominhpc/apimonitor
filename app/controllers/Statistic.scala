@@ -23,9 +23,9 @@ import java.util.Calendar
 object Statistic extends AbstractController {
 
   def index(date : String) = Action{
-    val time = Calendar.getInstance().getTime().toString()
-    val list = HiveUtils.getapiReport(date)
-    println("SIZE============="+list.size())
+    val time = date.split("-").reduceLeft(_ + "" + _)
+    val list = HiveUtils.getapiReport(time)
+    
     Ok(views.html.statistic_index(list))
   }
   

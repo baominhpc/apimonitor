@@ -2,24 +2,46 @@
 <html>
 <head>
 
+
+
+
+	
 <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.ui.core.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.ui.widget.js")"></script>
+<script src="@routes.Assets.at("javascripts/jquery.ui.datepicker.js")"></script>
+
 <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.dataTables.min.js")"></script>
+<link 
+	href="@routes.Assets.at("stylesheets/statistic.css")"
+	rel="stylesheet" media="screen" />
+
 <link  
 	href="@routes.Assets.at("stylesheets/demo_table.css")"
 	rel="stylesheet" media="screen"/>
-	
+	<link  
+	href="@routes.Assets.at("stylesheets/jquery-ui.css")"
+	rel="stylesheet" media="screen"/>
+	<script>
+	$(function(){
+	$("#datepicker").datepicker();
+});
+</script>
 </head>
 <body>
-<input type="text" name="date">
-<input type="button" value="Submit" />
+<form action="/statistic">
+Date: <input type="text" class="date" name="date" id="datepicker">
+<input type="submit" class="submit" value="Submit" />
+</form>
+
 <table id="tab" class="display">
     <thead>
         <tr>
             <th>API</th>
-            <th>Hit</th>
-            <th>Max</th>
-            <th>Min</th>
-            <th>Avg(ms/hit)</th>
+            <th>Hits</th>
+            <th>Max Hits (hit/ms)</th>
+            <th>Min Hits (hit/ms)</th>
+            <th>Avg Hits (hit/ms)</th>
             
     
         </tr>
@@ -36,11 +58,14 @@
     }
     </tbody>
 </table>
+
 </body>
 </html>
 <script>
 $(function(){
-	
-	$("#tab").dataTable({"iDisplayLength" : "50"});
+	$("#datepicker").datepicker("option","dateFormat","yy-mm-dd");
+	$("#tab").dataTable({  "sPaginationType": "full_numbers",
+						 	"iDisplayLength": 20
+						});
 });
 </script>

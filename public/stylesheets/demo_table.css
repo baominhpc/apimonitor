@@ -335,7 +335,7 @@ td.details {
 	margin: 0 3px;
 	cursor: pointer;
 	*cursor: hand;
-	color: #333 !important;
+/* 	color: #333 !important; */
 }
 
 .paging_full_numbers a.paginate_button {
@@ -552,7 +552,7 @@ table.KeyTable td.focus {
 }
 
 table.display tr.gradeA {
-	background-color: #eeffee;
+	background-color: black;
 }
 
 table.display tr.gradeC {
@@ -560,7 +560,7 @@ table.display tr.gradeC {
 }
 
 table.display tr.gradeX {
-	background-color: #ffdddd;
+	background-color: ;
 }
 
 table.display tr.gradeU {
@@ -573,4 +573,47 @@ div.box {
 	overflow: auto;
 	border: 1px solid #8080FF;
 	background-color: #E5E5FF;
+}
+
+#tab_info, #tab_paginate {
+  margin-top : 20px;
+}
+
+#tab_info,#tab_length,#tab_filter{
+color : #C5320B;
+
+margin-top : 30px;
+}
+
+#tab_paginate {
+margin-right : 80px;
+margin-top : 30px;
+margin-bottom : 50px;
+}
+
+#tab_paginate a{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color : #f6f6f6;
+    color: #0F6AB4 ;
+    border-style: solid;
+    border-width: 1px;
+    padding : 5px !important;
+    
+     margin : 10px 5px !important;
+}
+
+#tab_paginate span a{
+	
+	padding : 5px 8px !important;
+ 
+}
+
+
+a.paginate_active {
+ background-color:#0F6AB4 !important;
+   color : white !important;
 }
