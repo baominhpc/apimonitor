@@ -366,7 +366,6 @@ var Operation = Spine.Controller.sub({
 		
 	
 		this.expert_container.find("tr").each(function(){
-			
 			var name = $(this).find("input[name=name]").val();
 			var value = $(this).find("input[name=value]").val();
 			if(value == "" && name == ""){
@@ -376,13 +375,14 @@ var Operation = Spine.Controller.sub({
 				var jsonKey = jsonData;
 				var find = true;
 				for(var i in nameArr){
+					
 					jsonKey = jsonKey[nameArr[i]]
+					console.log(jsonKey)
 					if(jsonKey == null){
 						find = false;
 						break;
 					}
 				}
-				
 				if(value != ""){
 					find = value == jsonKey ? true : false;
 				}else{
