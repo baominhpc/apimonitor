@@ -242,7 +242,6 @@ var Operation = Spine.Controller.sub({
 
 		var formData = form2js("update_api_2_testcase_form", '.', true);
 		var json2 = JSON.stringify(formData, null, '\t');
-		
 		postJson("/add_api_to_testcase", json2, function(res) {
 			$("#testcase_list #resources #testcase_" + id + "_endpoint_list")
 					.html(res.responseText);
@@ -274,11 +273,11 @@ var Operation = Spine.Controller.sub({
 			
 			if(needed_name != null && needed_api != null && needed_name != "" && needed_api != ""){
 				$(this).find("input.input").val("");
-				if($(this).parents(".resource").find("." + needed_api + "  .responde_body").html() != null){
+				if( $(this).parents(".resource").find("." + needed_api + " .response_body").html() != null){
 					var response = $(this).parents(".resource")
 					.find("." + needed_api + " .response_body pre").html()
 					.replace(/<br>/g,"");
-					
+	
 					var jsonData = JSON.parse(response);
 					var arrName = needed_name.split(".");
 					var jsonKey = jsonData;
@@ -292,8 +291,6 @@ var Operation = Spine.Controller.sub({
 						$(this).find("input.input").val(jsonKey);
 					}
 				}
-			
-				
 				
 			}
 		});
